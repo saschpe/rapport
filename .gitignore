@@ -1,0 +1,7 @@
+dist
+*.vim
+*.pyc
+.*.sw?
+*.egg-info
+.venv
+.tox

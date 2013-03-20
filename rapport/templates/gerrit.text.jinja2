@@ -1,0 +1,5 @@
+[Gerrit:{{ hostname }}]
+
+{% for change in changes %}
+{{ change.number }}: {{ change.subject }}
+{% endfor %}

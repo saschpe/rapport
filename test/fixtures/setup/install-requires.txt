@@ -1,0 +1,6 @@
+argparse
+launchpadlib
+lxml
+Jinja2
+paramiko
+requests

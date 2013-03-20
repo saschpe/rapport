@@ -1,0 +1,11 @@
+<h3>Gerrit: {{ hostname }}</h3>
+<table>
+  <tbody>
+  {% for change in changes %}
+    <tr>
+      <td>{{ change.number }}</td>
+      <td>{{ change.subject }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
