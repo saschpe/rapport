@@ -49,9 +49,9 @@ class TestCurrentWeekTimeframe(TimeframeTestCase):
 
     def test_current_week_timeframe(self):
         start = self.timeframe.start
-        self.assertEqual(start.hours, 0)
-        self.assertEqual(start.minutes, 0)
-        self.assertEqual(start.seconds, 0)
+        self.assertEqual(start.hour, 0)
+        self.assertEqual(start.minute, 0)
+        self.assertEqual(start.second, 0)
         self.assertTrue(self.timeframe.contains(self.five_hours_ago))
 
     def test_current_week_timeframe_str(self):
@@ -65,19 +65,25 @@ class TestCurrentMonthTimeframe(TimeframeTestCase):
 
     def test_current_week_timeframe(self):
         start = self.timeframe.start
-        self.assertEqual(start.hours, 0)
-        self.assertEqual(start.minutes, 0)
-        self.assertEqual(start.seconds, 0)
+        self.assertEqual(start.hour, 0)
+        self.assertEqual(start.minute, 0)
+        self.assertEqual(start.second, 0)
         self.assertTrue(self.timeframe.contains(self.five_hours_ago))
 
     def test_current_week_timeframe_str(self):
         self.assertEqual("current_month", str(self.timeframe))
 
 
-class TestLastSevenDaysTimeframe(TimeframeTestCase):
+class TestNLastDaysTimeframe(TimeframeTestCase):
     def setUp(self):
-        super(TestLastSevenDaysTimeframe, self).setUp()
+        super(TestNLastDaysTimeframe, self).setUp()
         self.timeframe = rapport.timeframe.NLastDaysTimeframe()
 
+    def test_n_last_days_timeframe(self):
+        self.assertTrue(self.timeframe.contains(self.five_hours_ago))
+        self.assertEqual(self.timeframe.start.hour, self.timeframe.end.hour)
+        self.assertEqual(self.timeframe.start.minute, self.timeframe.end.minute)
+        self.assertEqual(self.timeframe.start.second, self.timeframe.end.second)
+
     def test_last_seven_days_timeframe_str(self):
-        self.assertEqual("last_seven_days", str(self.timeframe))
+        self.assertEqual("n_last_days", str(self.timeframe))
