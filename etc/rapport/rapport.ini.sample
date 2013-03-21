@@ -1,44 +1,50 @@
 [DEFAULT]
 # Print more verbose output (boolean value)
-#verbose=false
+#verbose=False
 
-#timeframe=current_week
-#timeframe=rapport.timeframe.CurrentWeekTimeframe
-#work_week=mo-fri
+# Select the timeframe to collect work report statistics for.
+# Possible values are: current_week, current_month, n_last_days
+timeframe=current_week
 
 [user]
 fullname=Sascha Peilicke
-login=speilicke
+username=speilicke
 email=speilicke@suse.com
 
-[openbuildservice:build.opensuse.org]
-alias=obs
-hostname=https://api.opensuse.org/
-port=443
-user=saschpe
 
-[openbuildservice:build.suse.de]
-alias=ibs
-hostname=https://api.suse.de/
-port=443
-user=saschpe
+# Configuration of the 'timeframe' timeframe:
+#[timeframe:timeframe]
+#start=datetime.datetime.now()
+#end=datetime.datetime.now() - datetime.timedelta(days=1)
 
-[gerrit:review.openstack.org]
-alias=roo
-hostname=review.openstack.org
-port=29418 
-user=saschpe
+# Configuration of the 'n_last_days' timeframe:
+#[timeframe:n_last_days]
+# Set the amount of days it should go backwards (default: 7)
+#days=7
 
-[launchpad]
-alias=lp
-user=saschpe
 
-[twitter]
-alias=tw
-user=saschpe
+[collector:openbuildservice:obs]
+url=https://api.opensuse.org:443/
+username=saschpe
 
-[bugzilla:bugzilla.novell.com]
-alias=bnc
-hostname=https://bugzilla.novell.com
-#port=443
-#user=saschpe
+[collector:openbuildservice:ibs]
+url=https://api.suse.de:443/
+username=saschpe
+
+[collector:gerrit:roo]
+url=ssh://review.openstack.org:29418
+username=saschpe
+
+[collector:launchpad:lp]
+url=https://api.launchpad.net/
+username=saschpe
+
+[collector:trello]
+username=saschpe
+
+[collector:twitter]
+username=saschpe
+
+[collector:bugzilla:bnc]
+url=https://bugzilla.novell.com:443/
+username=saschpe

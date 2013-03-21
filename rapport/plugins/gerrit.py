@@ -15,44 +15,37 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
 """
-Plugin for Gerrit activities.
+Gerrit plugin.
 """
 
+import datetime
 import json
-from datetime import datetime, timedelta
+import urlparse
 
 import paramiko
 
-from rapport.plugin import Plugin
+
+from rapport.collector import Collector
 
 
-class Gerrit(Plugin):
+class GerritCollector(Collector):
     def __init__(self, *args, **kwargs):
-        super(Gerrit, self).__init__(*args, **kwargs)
+        super(GerritCollector, self).__init__(*args, **kwargs)
 
         self._client = paramiko.SSHClient()
         self._client.load_system_host_keys()
 
-        #TODO: Move to cfg:
-        self.hostname = "review.openstack.org"
-        self.port = 29418
-        self.username = "saschpe"
-
-        #TODO: Global config or user input:
-        self.to_date = datetime.utcnow()
-        self.from_date = self.to_date - timedelta(7)
-
-    def _run_ssh_cmd(self, *args):
+    def _ssh_cmd(self, *args):
         command = "gerrit {0}".format(" ".join(args))
         _, stdout, stderr = self._client.exec_command(command)
         return (stdout.readlines(), stderr.readlines())
 
-    def _run_ssh_query(self, *args):
-        return self._run_ssh_cmd("query", "--format=JSON", *args)
+    def _ssh_query(self, *args):
+        return self._ssh_cmd("query", "--format=JSON", *args)
 
-    def collect(self, period):
-        self._client.connect(self.hostname, self.port, self.username)
-        stdout, stderr = self._run_ssh_query("owner:{0}".format(self.username))
+    def collect(self, timeframe):
+        self._client.connect(self.url.hostname, self.url.port, self.username)
+        stdout, stderr = self._ssh_query("owner:{0}".format(self.username))
         self._client.close()
 
         changes = []
@@ -60,17 +53,17 @@ class Gerrit(Plugin):
             for line in stdout[:-1]:  # Last line contains only download stats
                 change = json.loads(line)
                 if change.has_key("lastUpdated"):
-                    last_updated = datetime.utcfromtimestamp(change["lastUpdated"])
-                    if self.from_date < last_updated and last_updated <= self.to_date:
+                    last_updated = datetime.datetime.utcfromtimestamp(change["lastUpdated"])
+                    if timeframe.contains(last_updated):
                         changes.append(change)
                 else:
                     print("Change {0} is missing lastUpdated".format(change))
 
-        return {"hostname": self.hostname,
-                "user": self.username,
-                "changes": changes}
+        return self._results({"changes": changes})
 
-    def render(self):
-        results = self.collect()
-        template = Plugin.template_env.get_template("gerrit.txt")
-        return template.render(results)
+
+#class GerritTemplateRenderer(TemplateRenderer):
+#   def render(self):
+#       results = self.collect()
+#       template = Plugin.template_env.get_template("gerrit.txt")
+#       return template.render(results)

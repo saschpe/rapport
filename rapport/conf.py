@@ -19,4 +19,3 @@ import re
 import ConfigParser
 
 
-class ConfigLoader

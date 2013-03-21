@@ -1,4 +1,3 @@
-#
 # Copyright (c) 2013, Sascha Peilicke <saschpe@gmx.de>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,17 +14,17 @@
 # Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 """
-Collector for Launchpad.net activities.
+Launchpad plugin.
 """
 
 import launchpadlib
 
-from rapport.plugin import CollectorPlugin
+from rapport.collector import Collector
 
 
-class LaunchpadCollector(CollectorPlugin):
+class LaunchpadCollector(Collector):
     def __init__(self, *args, **kwargs):
         super(LaunchpadCollector, self).__init__(*args, **kwargs)
 
-    def collect(self):
-        pass
+    def collect(self, timeframe):
+        return self._results()

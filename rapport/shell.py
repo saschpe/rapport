@@ -23,17 +23,25 @@ import getpass
 import os
 import sys
 
-import plugin
-
 
 class RapportShell(object):
     def __init__(self, parser_class=argparse.ArgumentParser):
         self.parser_class = parser_class
 
     def main(self, argv):
-        parser = self.get_base_parser()
+        #parser = self.get_base_parser()
         #(options, args) = parser.parse_known_args(argv)
         #TODO:Implement
+
+
+        from rapport.collectors.gerrit import GerritCollector
+        from rapport.timeframe import CurrentWeekTimeframe
+        timeframe = CurrentWeekTimeframe()
+        gc = GerritCollector(alias="roo",
+                             url="ssh://review.openstack.org:29418",
+                             username="saschpe")
+
+        print gc.collect(timeframe)
 
 
 def main():
