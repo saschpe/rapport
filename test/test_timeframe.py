@@ -82,8 +82,10 @@ class TestNLastDaysTimeframe(TimeframeTestCase):
     def test_n_last_days_timeframe(self):
         self.assertTrue(self.timeframe.contains(self.five_hours_ago))
         self.assertEqual(self.timeframe.start.hour, self.timeframe.end.hour)
-        self.assertEqual(self.timeframe.start.minute, self.timeframe.end.minute)
-        self.assertEqual(self.timeframe.start.second, self.timeframe.end.second)
+        self.assertEqual(self.timeframe.start.minute,
+                         self.timeframe.end.minute)
+        self.assertEqual(self.timeframe.start.second,
+                         self.timeframe.end.second)
 
     def test_last_seven_days_timeframe_str(self):
         self.assertEqual("n_last_days", str(self.timeframe))

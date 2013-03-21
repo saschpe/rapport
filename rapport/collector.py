@@ -54,4 +54,3 @@ class Collector(object):
         """
         """
         raise NotImplementedError()
-

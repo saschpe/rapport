@@ -25,9 +25,9 @@ class SetupTestCase(unittest.TestCase):
         self.install_requires_file = "test/fixtures/setup/install-requires.txt"
         self.test_requires_file = "test/fixtures/setup/test-requires.txt"
 
-        self.install_requires = ["argparse", "launchpadlib", "lxml", "Jinja2", "paramiko", "requests"]
+        self.install_requires = ["argparse", "launchpadlib", "lxml", "Jinja2",
+                                 "paramiko", "requests"]
         self.test_requires = ["nose"]
-
 
     def test_parse_requirements(self):
         install_requires = parse_requirements(self.install_requires_file)

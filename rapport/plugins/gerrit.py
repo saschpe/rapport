@@ -18,9 +18,9 @@
 Gerrit plugin.
 """
 
-import datetime
 import json
 import urlparse
+from datetime import datetime
 
 import paramiko
 
@@ -36,11 +36,15 @@ class GerritCollector(Collector):
         self._client.load_system_host_keys()
 
     def _ssh_cmd(self, *args):
+        """Execute a gerrit command over SSH.
+        """
         command = "gerrit {0}".format(" ".join(args))
         _, stdout, stderr = self._client.exec_command(command)
         return (stdout.readlines(), stderr.readlines())
 
     def _ssh_query(self, *args):
+        """Execute a gerrit query over SSH and returns JSON-formatted data.
+        """
         return self._ssh_cmd("query", "--format=JSON", *args)
 
     def collect(self, timeframe):
@@ -52,8 +56,9 @@ class GerritCollector(Collector):
         if not stderr:
             for line in stdout[:-1]:  # Last line contains only download stats
                 change = json.loads(line)
-                if change.has_key("lastUpdated"):
-                    last_updated = datetime.datetime.utcfromtimestamp(change["lastUpdated"])
+                if "lastUpdated" in change:
+                    last_updated = datetime.utcfromtimestamp(
+                            change["lastUpdated"])
                     if timeframe.contains(last_updated):
                         changes.append(change)
                 else:
