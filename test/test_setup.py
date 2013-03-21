@@ -22,20 +22,16 @@ from rapport.setup import parse_requirements
 
 class SetupTestCase(unittest.TestCase):
     def setUp(self):
-        self.install_requires_file = "fixtures/requirements.txt"
-        self.test_requires_file = "fixtures/requirements.test.txt"
+        self.install_requires_file = "test/fixtures/setup/install-requires.txt"
+        self.test_requires_file = "test/fixtures/setup/test-requires.txt"
 
-        self.install_requires = ["argparse", "launchpadlib", "lxml", "Jinja2",
-                                 "paramiko", "requests"]
+        self.install_requires = ["argparse", "launchpadlib", "lxml", "Jinja2", "paramiko", "requests"]
         self.test_requires = ["nose"]
 
+
     def test_parse_requirements(self):
-        install_requires = parse_requirements("requirements.txt")
-        install_requires_default = parse_requirements()
+        install_requires = parse_requirements(self.install_requires_file)
+        test_requires = parse_requirements(self.test_requires_file)
 
-        self.assertEqual(install_requires, install_requires_default)
         self.assertEqual(install_requires, self.install_requires)
-
-        test_requires = parse_requirements("requirements.test.txt")
-
         self.assertEqual(test_requires, self.test_requires)
