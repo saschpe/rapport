@@ -14,7 +14,9 @@
 # Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
+import glob
 import re
+import shutil
 import subprocess
 import sys
 from distutils.core import Command
@@ -36,10 +38,28 @@ class PEP8Command(Command):
                         "--exclude=.venv,.tox,dist,doc", "."])
 
 
+class CleanupCommand(Command):
+    patterns = [".tox", ".venv", "build", "dist", "*.egg-info"]
+    description = "Clean up project directory"
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        for pattern in CleanupCommand.patterns:
+            for file in glob.glob(pattern):
+                shutil.rmtree(file, ignore_errors=True)
+
+
 def get_cmdclass():
     """Dictionary of all distutils commands defined in this module.
     """
-    return {"pep8": PEP8Command}
+    return {"cleanup": CleanupCommand,
+            "pep8": PEP8Command}
 
 
 def parse_requirements(requirements_file='requirements.txt'):
