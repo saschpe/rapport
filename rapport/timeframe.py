@@ -59,6 +59,8 @@ class Timeframe(object):
 
 
 class CurrentWeekTimeframe(Timeframe):
+    """Current week timeframe (in UTC).
+    """
     def __init__(self):
         self._end = datetime.datetime.utcnow()
         # Compute the day but reset the hours/minutes/seconds to zero,
@@ -70,6 +72,8 @@ class CurrentWeekTimeframe(Timeframe):
 
 
 class CurrentMonthTimeframe(Timeframe):
+    """Current month timeframe (in UTC).
+    """
     def __init__(self):
         self._end = datetime.datetime.utcnow()
         self._start = datetime.datetime(year=self._end.year,
@@ -77,7 +81,7 @@ class CurrentMonthTimeframe(Timeframe):
 
 
 class NLastDaysTimeframe(Timeframe):
-    """
+    """'N' last days timeframe (in UTC).
     """
     def __init__(self, days=7):
         self._end = datetime.datetime.utcnow()
