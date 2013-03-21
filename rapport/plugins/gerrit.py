@@ -43,7 +43,8 @@ class Gerrit(Plugin):
         self.from_date = self.to_date - timedelta(7)
 
     def _run_ssh_cmd(self, *args):
-        _, stdout, stderr = self._client.exec_command("gerrit {0}".format(" ".join(args)))
+        command = "gerrit {0}".format(" ".join(args))
+        _, stdout, stderr = self._client.exec_command(command)
         return (stdout.readlines(), stderr.readlines())
 
     def _run_ssh_query(self, *args):
@@ -65,7 +66,7 @@ class Gerrit(Plugin):
                 else:
                     print("Change {0} is missing lastUpdated".format(change))
 
-        return {"hostname": self.hostname, 
+        return {"hostname": self.hostname,
                 "user": self.username,
                 "changes": changes}
 
@@ -73,4 +74,3 @@ class Gerrit(Plugin):
         results = self.collect()
         template = Plugin.template_env.get_template("gerrit.txt")
         return template.render(results)
-

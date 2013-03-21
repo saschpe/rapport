@@ -3,5 +3,6 @@ dist
 *.pyc
 .*.sw?
 *.egg-info
-.venv
+.coverage
 .tox
+.venv

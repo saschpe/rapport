@@ -16,13 +16,10 @@
 # Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+from setuptools import setup, find_packages
 
 import rapport
-from rapport.setup import parse_requirements
+from rapport.setup import get_cmdclass, parse_requirements
 
 
 install_requires = parse_requirements("tools/install-requires.txt")
@@ -38,10 +35,11 @@ setup(
     author_email=rapport.__author__.rsplit(' ', 1)[1][1:-1],
     url='http://github.com/saschpe/rapport',
     scripts=['bin/rapport'],
-    packages=['rapport'],
+    packages=find_packages(exclude=['test', 'test.*']),
     #package_data={'rapport': ['templates/*']},
-    setup_requires=install_requires+tests_requires,
+    setup_requires=install_requires + tests_requires,
     install_requires=install_requires,
+    cmdclass=get_cmdclass(),
     tests_require=tests_requires,
     test_suite="nose.collector",
     classifiers=[

@@ -16,6 +16,8 @@
 
 import datetime
 
+from rapport.util import camelcase_to_underscores
+
 
 class Timeframe(object):
     """Represents a period of time between a start and end time.
@@ -38,22 +40,44 @@ class Timeframe(object):
     def contains(self, date):
         """Checks if a date is within a timeframe.
 
-        :date: The date to 
+        :date: The date to check
         """
         return self._start <= date and date < self._end
 
     def __str__(self):
-        return self.__class__.__name__.lower()
+        """Returns the class name in underscores.
+
+        Additionally, for sub-classes, the suffix '_timeframe' is split off.
+
+            >>> t = Timeframe()
+            >>> str(t)
+            'timeframe'
+        """
+        return camelcase_to_underscores(self.__class__.__name__) \
+            .rsplit("_timeframe")[0]
 
 
 class CurrentWeekTimeframe(Timeframe):
     def __init__(self):
         self._end = datetime.datetime.utcnow()
-        self._start = self._end - datetime.timedelta(days=self._end.weekday())
+        # Compute the day but reset the hours/minutes/seconds to zero,
+        # we want the exact week's start:
+        week_start = self._end - datetime.timedelta(days=self._end.weekday())
+        self._start = datetime.datetime(year=week_start.year,
+                                        month=week_start.month,
+                                        day=week_start.day)
 
-    def __str__(self):
-        return "current_week"
+
+class CurrentMonthTimeframe(Timeframe):
+    def __init__(self):
+        self._end = datetime.datetime.utcnow()
+        self._start = datetime.datetime(year=self._end.year,
+                                        month=self._end.month, day=1)
 
 
-class LastSevenDaysTimeframe(Timeframe):
-    pass
+class NLastDaysTimeframe(Timeframe):
+    """
+    """
+    def __init__(self, days=7):
+        self._end = datetime.datetime.utcnow()
+        self._start = self._end - datetime.timedelta(days=days)

@@ -14,9 +14,32 @@
 # Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
-import os
 import re
+import subprocess
 import sys
+from distutils.core import Command
+
+
+class PEP8Command(Command):
+    description = "Run PEP8 with custom options"
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        subprocess.call(["pep8", "--repeat", "--show-source",
+                        "--ignore=E711,E712,E125,E126",
+                        "--exclude=.venv,.tox,dist,doc", "."])
+
+
+def get_cmdclass():
+    """Dictionary of all distutils commands defined in this module.
+    """
+    return {"pep8": PEP8Command}
 
 
 def parse_requirements(requirements_file='requirements.txt'):

@@ -28,18 +28,56 @@ class TimeframeTestCase(unittest.TestCase):
 
 
 class TestTimeframe(TimeframeTestCase):
-    def test_timeframe(self):
-        timeframe = rapport.timeframe.Timeframe(start=self.a_day_ago, end=self.now)
+    def setUp(self):
+        super(TestTimeframe, self).setUp()
+        self.timeframe = rapport.timeframe.Timeframe(start=self.a_day_ago,
+                                                     end=self.now)
 
-        self.assertEqual(self.a_day_ago, timeframe.start)
-        self.assertEqual(self.now, timeframe.end)
-        self.assertTrue(timeframe.contains(self.five_hours_ago))
-        self.assertEqual("timeframe", str(timeframe))
+    def test_timeframe(self):
+        self.assertEqual(self.a_day_ago, self.timeframe.start)
+        self.assertEqual(self.now, self.timeframe.end)
+        self.assertTrue(self.timeframe.contains(self.five_hours_ago))
+
+    def test_timeframe_str(self):
+        self.assertEqual("timeframe", str(self.timeframe))
 
 
 class TestCurrentWeekTimeframe(TimeframeTestCase):
+    def setUp(self):
+        super(TestCurrentWeekTimeframe, self).setUp()
+        self.timeframe = rapport.timeframe.CurrentWeekTimeframe()
+
     def test_current_week_timeframe(self):
-        timeframe = rapport.timeframe.CurrentWeekTimeframe()
- 
-        self.assertTrue(timeframe.contains(self.five_hours_ago))
-        self.assertEqual("current_week", str(timeframe))
+        start = self.timeframe.start
+        self.assertEqual(start.hours, 0)
+        self.assertEqual(start.minutes, 0)
+        self.assertEqual(start.seconds, 0)
+        self.assertTrue(self.timeframe.contains(self.five_hours_ago))
+
+    def test_current_week_timeframe_str(self):
+        self.assertEqual("current_week", str(self.timeframe))
+
+
+class TestCurrentMonthTimeframe(TimeframeTestCase):
+    def setUp(self):
+        super(TestCurrentMonthTimeframe, self).setUp()
+        self.timeframe = rapport.timeframe.CurrentMonthTimeframe()
+
+    def test_current_week_timeframe(self):
+        start = self.timeframe.start
+        self.assertEqual(start.hours, 0)
+        self.assertEqual(start.minutes, 0)
+        self.assertEqual(start.seconds, 0)
+        self.assertTrue(self.timeframe.contains(self.five_hours_ago))
+
+    def test_current_week_timeframe_str(self):
+        self.assertEqual("current_month", str(self.timeframe))
+
+
+class TestLastSevenDaysTimeframe(TimeframeTestCase):
+    def setUp(self):
+        super(TestLastSevenDaysTimeframe, self).setUp()
+        self.timeframe = rapport.timeframe.NLastDaysTimeframe()
+
+    def test_last_seven_days_timeframe_str(self):
+        self.assertEqual("last_seven_days", str(self.timeframe))

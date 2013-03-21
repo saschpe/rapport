@@ -3,6 +3,7 @@
 #verbose=false
 
 #timeframe=current_week
+#timeframe=rapport.timeframe.CurrentWeekTimeframe
 #work_week=mo-fri
 
 [user]

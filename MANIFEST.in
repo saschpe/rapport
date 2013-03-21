@@ -1,2 +1,6 @@
-include LICENSE README.rst tox.ini *.txt
-recursive-include tools *.txt
+include README.rst
+include LICENSE 
+include tox.ini
+include requirements.txt
+recursive-include doc *
+recursive-include tools *
