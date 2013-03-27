@@ -24,29 +24,34 @@ import os
 import sys
 
 
-class RapportShell(object):
-    def __init__(self, parser_class=argparse.ArgumentParser):
-        self.parser_class = parser_class
+class RapportCLI(object):
+    def __init__(self):
+        pass
 
     def main(self, argv):
-        #parser = self.get_base_parser()
-        #(options, args) = parser.parse_known_args(argv)
-        #TODO:Implement
+        parser = argparse.ArgumentParser()
 
 
-        from rapport.collectors.gerrit import GerritCollector
+        from rapport.plugins.gerrit import GerritCollector
+        from rapport.plugins.bugzilla import BugzillaCollector
         from rapport.timeframe import CurrentWeekTimeframe
+
         timeframe = CurrentWeekTimeframe()
+
         gc = GerritCollector(alias="roo",
                              url="ssh://review.openstack.org:29418",
-                             username="saschpe")
+                             login="saschpe")
 
+        bnc = BugzillaCollector(alias="bnc",
+                                url="https://bugzilla.novell.com",
+                                login="saschpe",
+                                password="wioX9qud")
         print gc.collect(timeframe)
 
 
 def main():
     try:
-        RapportShell().main(sys.argv[1:])
+        RapportCLI().main(sys.argv[1:])
     except Exception as e:
         print >> sys.stderr, e
         sys.exit(1)
