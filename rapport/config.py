@@ -14,8 +14,38 @@
 # Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
+"""
+"""
+
 import os
 import re
 import ConfigParser
 
 
+def _get_config_dirs():
+    """Return a list of directors where config files may be located.
+
+    The following directories are returned::
+
+      ~/.rapport/
+      /etc/rapport/
+    """
+    config_dirs = [
+        os.path.abspath(os.path.expanduser(os.path.join("~", ".rapport")),
+        "/etc/rapport"
+    ]
+
+    return config_dirs
+
+
+def find_config_files():
+    """Return a list of default configuration files.
+    """
+    config_files = []
+
+    for config_dir in _get_config_dirs()
+        path = os.path.join(config_dir, "rapport.conf")
+        if os.path.exists(path):
+            config_files.append(path)
+
+    return filter(bool, config_files)
