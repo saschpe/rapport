@@ -15,25 +15,15 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
 """
-Launchpad plugin.
+Trello plugin.
 """
-
-from launchpadlib.launchpad import Launchpad
 
 from rapport.collector import Collector
 
 
-class LaunchpadCollector(Collector):
+class TrelloCollector(Collector):
     def __init__(self, *args, **kwargs):
-        super(LaunchpadCollector, self).__init__(*args, **kwargs)
-
-        self.lp = Launchpad.login_anonymously(self.login, 'production')
-
-    def _get_json(url):
-        return json.loads(requests.get(url).text)
+        super(TrelloCollector, self).__init__(*args, **kwargs)
 
     def collect(self, timeframe):
-        bug_tasks = lp.people["saschpe"].searchTasks()
-
-        #TODO: Try to find some useful info
         return self._results()

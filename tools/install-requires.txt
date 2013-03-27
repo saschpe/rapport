@@ -1,4 +1,5 @@
 argparse
+bugzilla
 launchpadlib
 lxml
 Jinja2

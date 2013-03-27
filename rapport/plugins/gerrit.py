@@ -19,7 +19,6 @@ Gerrit plugin.
 """
 
 import json
-import urlparse
 from datetime import datetime
 
 import paramiko
@@ -48,8 +47,8 @@ class GerritCollector(Collector):
         return self._ssh_cmd("query", "--format=JSON", *args)
 
     def collect(self, timeframe):
-        self._client.connect(self.url.hostname, self.url.port, self.username)
-        stdout, stderr = self._ssh_query("owner:{0}".format(self.username))
+        self._client.connect(self.url.hostname, self.url.port, self.login)
+        stdout, stderr = self._ssh_query("owner:{0}".format(self.login))
         self._client.close()
 
         changes = []
@@ -58,7 +57,7 @@ class GerritCollector(Collector):
                 change = json.loads(line)
                 if "lastUpdated" in change:
                     last_updated = datetime.utcfromtimestamp(
-                            change["lastUpdated"])
+                        change["lastUpdated"])
                     if timeframe.contains(last_updated):
                         changes.append(change)
                 else:

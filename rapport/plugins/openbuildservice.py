@@ -29,22 +29,22 @@ class OpenBuildServiceCollector(Collector):
         super(OpenBuildServiceCollector, self).__init__(*args, **kwargs)
 
     def _get_xml(self, url):
-        response = requests.get(url, auth=(self.username, self.password))
+        response = requests.get(url, auth=(self.login, self.password))
         return lxml.etree.fromstring(reponse.text)
 
     def collect(self):
         # Directly querying for all user's requests is killing the OBS api.
         # So we ask for all projects / packages where the user is involved in first.
 
-        user_projects_url = "{0}/search/project/id?match=person/@userid='{1}'".format(self.url, self.user)
+        user_projects_url = "{0}/search/project/id?match=person/@userid='{1}'".format(self.url.geturl(), self.login)
         xml_root = self._get_xml(user_projects_url)
         user_projects = [project.get('name') for project in xml_root.iterfind(".//project")]
 
-        #user_packages_url = "{0}/search/package/id?match=person/@userid='{1}'".format(self.url, self.user)
+        #user_packages_url = "{0}/search/package/id?match=person/@userid='{1}'".format(self.url.geturl(), self.login)
         #xml_root = self._get_xml(user_projects_url)
         #user_packages = [package.values() for package in xml_root.iterfind(".//package")]
 
         #"https://api.opensuse.org/search/request/id?match=history/@who='saschpe'"
 
         for project in user_projects:
-            requests = self._get_xml("{0}/request?view=collection&user={1}&project={2}".format(self.url, self.user, project))
+            requests = self._get_xml("{0}/request?view=collection&user={1}&project={2}".format(self.url.geturl(), self.login, project))

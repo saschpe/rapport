@@ -49,8 +49,8 @@ class Timeframe(object):
 
         Additionally, for sub-classes, the suffix '_timeframe' is split off.
 
-            >>> from rapport.timeframe import Timeframe
-            >>> t = Timeframe(start=None, end=None)
+            >>> from rapport import timeframe
+            >>> t = timeframe.Timeframe(start=None, end=None)
             >>> str(t)
             'timeframe'
         """
