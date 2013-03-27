@@ -1,0 +1,7 @@
+[Bugzilla: {{ url.hostname }}]
+
+- {{ open_bugs.length }} open bugs
+- {{ closed_bugs.length }} closed bugs:
+{% for bug in closed_bugs %}
+  + {{ bug.id }}: {{ bug.summary }}
+{% endfor %}
