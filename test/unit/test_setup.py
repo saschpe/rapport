@@ -15,6 +15,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
 
+import os
 import unittest
 
 from rapport.setup import parse_requirements
@@ -22,16 +23,17 @@ from rapport.setup import parse_requirements
 
 class SetupTestCase(unittest.TestCase):
     def setUp(self):
-        self.install_requires_file = "test/fixtures/setup/install-requires.txt"
-        self.test_requires_file = "test/fixtures/setup/test-requires.txt"
-
-        self.install_requires = ["argparse", "launchpadlib", "lxml", "Jinja2",
-                                 "paramiko", "requests"]
-        self.test_requires = ["nose"]
+        self.install_reqs_file = os.path.join("test", "unit", "fixtures",
+                                              "setup", "install-requires.txt")
+        self.test_reqs_file = os.path.join("test", "unit", "fixtures",
+                                           "setup", "test-requires.txt")
+        self.install_reqs = ["argparse", "launchpadlib", "lxml", "Jinja2",
+                             "paramiko", "requests"]
+        self.test_reqs = ["nose"]
 
     def test_parse_requirements(self):
-        install_requires = parse_requirements(self.install_requires_file)
-        test_requires = parse_requirements(self.test_requires_file)
+        install_reqs = parse_requirements(self.install_reqs_file)
+        test_reqs = parse_requirements(self.test_reqs_file)
 
-        self.assertEqual(install_requires, self.install_requires)
-        self.assertEqual(test_requires, self.test_requires)
+        self.assertEqual(install_reqs, self.install_reqs)
+        self.assertEqual(test_reqs, self.test_reqs)
