@@ -36,7 +36,7 @@ def camelcase_to_underscores(word):
 def silent_popen(args, **kwargs):
     """Wrapper for subprocess.Popen with suppressed output.
 
-    STERR is redirected to STDOUT which is piped back to the 
+    STERR is redirected to STDOUT which is piped back to the
     calling process and returned as the result.
     """
     return subprocess.Popen(args,
