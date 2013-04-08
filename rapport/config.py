@@ -18,7 +18,6 @@
 """
 
 import os
-import re
 import ConfigParser
 
 
@@ -33,8 +32,22 @@ def _get_config_dirs():
     config_dirs = [
         os.path.expanduser(os.path.join("~", ".rapport")),
         os.path.join("etc", "rapport"),
+        os.path.abspath(".")
     ]
     return config_dirs
+
+
+def _get_plugin_dirs():
+    """Return a list of directories where plugins may be located.
+    """
+    return map(lambda d: os.path.join(d, "plugins"), _get_config_dirs())
+
+
+def _get_template_dirs():
+    """Return a list of directories where templates may be located.
+    """
+    return map(lambda d: os.path.join(d, "templates"), _get_config_dirs())
+    return template_dirs
 
 
 def find_config_files():
@@ -42,9 +55,23 @@ def find_config_files():
     """
     config_files = []
 
-    for config_dir in _get_config_dirs()
+    for config_dir in _get_config_dirs():
         path = os.path.join(config_dir, "rapport.conf")
         if os.path.exists(path):
             config_files.append(path)
 
     return filter(bool, config_files)
+
+
+def find_plugin_files():
+    """Return a list of rapport plugin files.
+    """
+    plugin_files = []
+
+    for plugin_dir in _get_plugin_dirs():
+        if os.path.isdir(plugin_dir):
+            for plugin_file in os.listdir(plugin_dir):
+                if plugin_file.endswith(".py"):
+                    plugin_files.append(os.path.join(plugin_dir, plugin_file))
+
+    return filter(bool, plugin_files)
