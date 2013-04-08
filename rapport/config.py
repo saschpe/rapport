@@ -23,7 +23,7 @@ import ConfigParser
 
 
 def _get_config_dirs():
-    """Return a list of directors where config files may be located.
+    """Return a list of directories where config files may be located.
 
     The following directories are returned::
 
@@ -31,10 +31,9 @@ def _get_config_dirs():
       /etc/rapport/
     """
     config_dirs = [
-        os.path.abspath(os.path.expanduser(os.path.join("~", ".rapport")),
-        "/etc/rapport"
+        os.path.expanduser(os.path.join("~", ".rapport")),
+        os.path.join("etc", "rapport"),
     ]
-
     return config_dirs
 
 
