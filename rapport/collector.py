@@ -19,8 +19,11 @@
 
 import urlparse
 
+from rapport.util import camelcase_to_underscores
+from rapport.plugin import RapportPlugin
 
-class Collector(object):
+
+class Collector(RapportPlugin):
     """
     """
 
@@ -33,7 +36,7 @@ class Collector(object):
         if alias == "":
             self.alias == self.__str__()
 
-        if type(url) is not urlparse.ParseResult:
+        if url and type(url) is not urlparse.ParseResult:
             self.url = urlparse.urlparse(url)
 
     def _results(self, dict={}):
@@ -44,13 +47,13 @@ class Collector(object):
         of any Collector implementation.
 
            >>> from rapport import collector
-           >>> c = collector.Collector(alias="a", login="u")
+           >>> c = collector.Collector(alias="a", url="http://example.com", login="u")
            >>> c._results()
-           '{"alias": "a", "login": "u"}'
-           >>> c._results({"mykey": "mykey"})
-           '{"alias": "a", "mykey": "mykey", "login": "u"}'
+           {'url': 'http://example.com', 'alias': 'a', 'login': 'u'}
+           >>> c._results({'mykey': 'mykey'})
+           {'url': 'http://example.com', 'alias': 'a', 'login': 'u', 'mykey': 'mykey'}
         """
-        results = {"alias:": self.alias,
+        results = {"alias": self.alias,
                    "url": self.url.geturl(),
                    "login": self.login}.copy()
         results.update(dict)
