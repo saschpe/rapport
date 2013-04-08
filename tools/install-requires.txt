@@ -1,7 +1,7 @@
 argparse
-bugzilla
 launchpadlib
 lxml
 Jinja2
 paramiko
+python-bugzilla
 requests
