@@ -30,9 +30,9 @@ class OpenBuildServicePlugin(rapport.plugin.Plugin):
 
     def _get_xml(self, url):
         response = requests.get(url, auth=(self.login, self.password))
-        return lxml.etree.fromstring(reponse.text)
+        return lxml.etree.fromstring(response.text)
 
-    def collect(self):
+    def collect(self, timeframe):
         # Directly querying for all user's requests is killing the OBS api.
         # So we ask for all projects / packages where the user is involved in first.
 

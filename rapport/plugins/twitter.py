@@ -15,28 +15,18 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
 """
-Launchpad plugin.
+Twitter plugin.
 """
-
-from launchpadlib.launchpad import Launchpad
 
 import rapport.plugin
 
 
-class LaunchpadPlugin(rapport.plugin.Plugin):
+class TwitterPlugin(rapport.plugin.Plugin):
     def __init__(self, *args, **kwargs):
-        super(LaunchpadPlugin, self).__init__(*args, **kwargs)
-
-        self.lp = Launchpad.login_anonymously(self.login, 'production')
-
-    def _get_json(url):
-        return json.loads(requests.get(url).text)
+        super(TwitterPlugin, self).__init__(*args, **kwargs)
 
     def collect(self, timeframe):
-        bug_tasks = self.lp.people["saschpe"].searchTasks()
-
-        #TODO: Try to find some useful info
         return self._results()
 
 
-rapport.plugin.register("launchpad", LaunchpadPlugin)
+rapport.plugin.register("twitter", TwitterPlugin)
