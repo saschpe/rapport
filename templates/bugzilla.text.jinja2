@@ -1,7 +1,12 @@
-[Bugzilla: {{ url.hostname }}]
-
-- {{ open_bugs.length }} open bugs
-- {{ closed_bugs.length }} closed bugs:
-{% for bug in closed_bugs %}
+{% if open_bugs|length > 0 or closed_bugs|length > 0 %}
+[bugzilla: {{ url.hostname }}]
+{% if open_bugs|length > 0 -%}
+- {{ open_bugs|length }} open bugs
+{% endif -%}
+{% if closed_bugs|length > 0 -%}
+- {{ closed_bugs|length }} closed bugs:
+{%- for bug in closed_bugs %}
   + {{ bug.id }}: {{ bug.summary }}
-{% endfor %}
+{% endfor -%}
+{% endif -%}
+{% endif -%}
