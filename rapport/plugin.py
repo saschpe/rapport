@@ -52,9 +52,8 @@ class Plugin(object):
         """
         results = {"plugin": str(self),
                    "alias": self.alias,
+                   "url": self.url,
                    "login": self.login}
-        if self.url:
-            results["url"] = self.url.geturl()
         results.update(dict)
         return results
 
