@@ -34,6 +34,7 @@ if __name__ == "__main__":
 import rapport
 import rapport.config
 import rapport.plugin
+import rapport.template
 import rapport.timeframe
 
 
@@ -46,44 +47,30 @@ class CLI(object):
         self.plugins = rapport.plugin.init_from_config()
         self.timeframe = rapport.timeframe.init_from_config()
 
-    def collect(self):
+    def create(self):
         with futures.ThreadPoolExecutor(max_workers=4) as executor:
-           fs = dict((executor.submit(p.collect, self.timeframe), p.alias) for p in self.plugins)
-           for future in futures.as_completed(fs):
-               print "Result for {0}: {1}".format(fs[future], future.result())
+            plugin_futures = dict((executor.submit(p.collect, self.timeframe), p) for p in self.plugins)
+            for future in futures.as_completed(plugin_futures):
+                if rapport.config.get_int("rapport", "verbosity") >= 1:
+                    print "Result for {0}: {1}".format(plugin_futures[future].alias, future.result())
+                template = rapport.template.get_template(plugin_futures[future], "text")
+                if template:
+                    print template.render(future.result())
 
-    def generate(self):
-        pass
 
-    def edit(self):
-        pass
-
-    def send(self):
-        pass
+   #def edit(self):
+   #    pass
 
     def main(self, argv):
         parser = argparse.ArgumentParser()
-        parser.add_argument("--version", action="version",
-                            version="rapport {0}".format(rapport.__version__))
-        #parser.add_argument('--verbose', '-v', action='count')
-
+        parser.add_argument("--version", action="version", version="rapport {0}".format(rapport.__version__))
         subparsers = parser.add_subparsers(title="commands")
 
-        parser_collect = subparsers.add_parser("collect", help="collect activities from various sources")
-        parser_collect.add_argument("source", nargs="?", help="specific source")
-        parser_collect.set_defaults(func=CLI.collect(self))
-
-       #parser_generate = subparsers.add_parser("generate", help="generate template from collected data")
-       ##parser_generate.add_argument("source", nargs="?", help="specific source")
-       ##parser_create.add_argument("-t", "--type", default="text", nargs="?", help="work report type (text, html)")
-       #parser_generate.set_defaults(func=CLI.generate(self))
+        parser_create = subparsers.add_parser("create", help="create work report")
+        parser_create.set_defaults(func=CLI.create(self))
 
        #parser_edit = subparsers.add_parser("edit", help="edit report prior to sending")
        #parser_edit.set_defaults(func=CLI.edit(self))
-
-       #parser_send = subparsers.add_parser("send", help="send work report")
-       ##parser_generate.add_argument("destination", nargs="+", help="")
-       #parser_send.set_defaults(func=CLI.send(self))
 
         parser_help = subparsers.add_parser("help", help="show this help")
         parser_help.set_defaults(func=lambda args: parser.print_help())
