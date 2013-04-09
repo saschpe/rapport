@@ -16,7 +16,8 @@
 
 import datetime
 
-from rapport.util import camelcase_to_underscores
+import rapport.config
+import rapport.util
 
 
 class Timeframe(object):
@@ -54,8 +55,7 @@ class Timeframe(object):
             >>> str(t)
             'timeframe'
         """
-        return camelcase_to_underscores(self.__class__.__name__) \
-            .rsplit("_timeframe")[0]
+        return rapport.util.camelcase_to_underscores(self.__class__.__name__).rsplit("_timeframe")[0]
 
 
 class CurrentWeekTimeframe(Timeframe):
@@ -71,6 +71,15 @@ class CurrentWeekTimeframe(Timeframe):
                                         day=week_start.day)
 
 
+class WeekTimeframe(Timeframe):
+    """N-th week of year timeframe (in UTC).
+
+    :week: Week number (starting from 1)
+    """
+    def __init__(self, week=1):
+        raise NotImplementedError()
+
+
 class CurrentMonthTimeframe(Timeframe):
     """Current month timeframe (in UTC).
     """
@@ -80,9 +89,49 @@ class CurrentMonthTimeframe(Timeframe):
                                         month=self._end.month, day=1)
 
 
+class MonthTimeframe(Timeframe):
+    """N-th month of year timeframe (in UTC).
+
+    :month: Month number (starting from 1)
+    """
+    def __init__(self, month=1):
+        raise NotImplementedError()
+
+
 class NLastDaysTimeframe(Timeframe):
     """'N' last days timeframe (in UTC).
     """
     def __init__(self, days=7):
         self._end = datetime.datetime.utcnow()
         self._start = self._end - datetime.timedelta(days=days)
+
+
+_TIMEFRAME_CATALOG = {"current_month": CurrentMonthTimeframe,
+                      "current_week": CurrentWeekTimeframe,
+                      "month": MonthTimeframe,
+                      "week": WeekTimeframe,
+                      "n_last_days": NLastDaysTimeframe}
+
+
+def init(name, *args, **kwargs):
+    """Instantiate a timeframe from the catalog.
+    """
+    if name in _TIMEFRAME_CATALOG:
+        if rapport.config.get("rapport", "verbosity") >= 2:
+            print "Initialize timeframe {0}: {1} {2}".format(name, args, kwargs)
+        try:
+            return _TIMEFRAME_CATALOG[name](*args, **kwargs)
+        except ValueError as e:
+            print >>sys.stderr, "Failed to initialize timeframe {0}: {1}!".format(name, str(e).title())
+    else:
+        print >>sys.stderr, "Failed to initialize timeframe {0}: Not in catalog!".format(name)
+
+
+def init_from_config():
+    return init(rapport.config.get("timeframe", "default"))
+
+
+def catalog():
+    """Returns the list of registered timeframes.
+    """
+    return _TIMEFRAME_CATALOG.keys()
