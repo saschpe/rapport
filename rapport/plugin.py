@@ -50,8 +50,9 @@ class Plugin(object):
            >>> c._results({'mykey': 'mykey'})
            {'url': 'http://example.com', 'alias': 'a', 'login': 'u', 'mykey': 'mykey'}
         """
-        results = {"alias": self.alias,
-                   "login": self.login}.copy()
+        results = {"plugin": str(self),
+                   "alias": self.alias,
+                   "login": self.login}
         if self.url:
             results["url"] = self.url.geturl()
         results.update(dict)
