@@ -56,7 +56,6 @@ def init_user():
     conf_dir = os.path.expanduser(os.path.join("~", ".rapport")),
     conf_file = os.path.join(conf_dir, "rapport.conf")
 
-    # TODO: Add verbosity
     if not os.path.isdir(conf_dir):
         os.mkdir(conf_dir)
         for subdir in ["plugins", "reports", "templates"]:
@@ -70,12 +69,18 @@ def init_user():
 
 
 CONF = None
-def configure():
+
+
+def load():
     global CONF
     config = ConfigParser.SafeConfigParser()
     config.read(find_config_files()[0])
     CONF = config
     return CONF
+
+
+def get(section, option):
+    return CONF.get(section, option)
 
 
 def plugins():
