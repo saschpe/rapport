@@ -51,8 +51,9 @@ class Plugin(object):
            {'url': 'http://example.com', 'alias': 'a', 'login': 'u', 'mykey': 'mykey'}
         """
         results = {"alias": self.alias,
-                   "url": self.url.geturl(),
                    "login": self.login}.copy()
+        if self.url:
+            results["url"] = self.url.geturl()
         results.update(dict)
         return results
 
@@ -78,8 +79,9 @@ def _get_plugin_dirs():
     plugin_dirs = [
         os.path.expanduser(os.path.join("~", ".rapport", "plugins")),
         os.path.join("rapport", "plugins")
-    ]#+ map(lambda d: os.path.join(d, "rapport", "plugins"), site.getsitepackages())
+    ]  # + map(lambda d: os.path.join(d, "rapport", "plugins"), site.getsitepackages())
     return plugin_dirs
+
 
 def _path_to_module(path):
     """Translates paths to *.py? files into module paths.
@@ -99,34 +101,46 @@ def discover():
         if os.path.isdir(plugin_dir):
             for plugin_file in os.listdir(plugin_dir):
                 if plugin_file.endswith(".py") and not plugin_file == "__init__.py":
-                    absfile =os.path.join(plugin_dir, plugin_file)
-                    plugin_files.append(absfile)
+                    plugin_files.append(os.path.join(plugin_dir, plugin_file))
 
-    #TODO: -vv print "Found plugin modules: {0}".format(plugin_files)
+    if rapport.config.get_int("rapport", "verbosity") >= 2:
+        print "Found plugin modules: {0}".format(plugin_files)
     for plugin_file in plugin_files:
-        #TODO: -vv print "Importing module {0}".format(_path_to_module(plugin_file))
+        if rapport.config.get_int("rapport", "verbosity") >= 2:
+            print "Importing module {0}".format(_path_to_module(plugin_file))
         __import__(_path_to_module(plugin_file))
- 
+
 
 _PLUGIN_CATALOG = {}
+
+
 def register(name, klass):
     """Add a plugin to the plugin catalog.
     """
-    #TODO: -v print "Registered plugin: {0}".format(name)
+    if rapport.config.get_int("rapport", "verbosity") >= 1:
+        print "Registered plugin: {0}".format(name)
     _PLUGIN_CATALOG[name] = klass
 
 
 def init(name, *args, **kwargs):
     """Instantiate a plugin from the catalog.
     """
-    if _PLUGIN_CATALOG.has_key(name):
-        #TODO: -v print "Initialize plugin {0}: {1} {2}".format(name, args, kwargs)
+    if name in _PLUGIN_CATALOG:
+        if rapport.config.get_int("rapport", "verbosity") >= 2:
+            print "Initialize plugin {0}: {1} {2}".format(name, args, kwargs)
         try:
             return _PLUGIN_CATALOG[name](*args, **kwargs)
         except ValueError as e:
             print >>sys.stderr, "Failed to initialize plugin {0}: {1}!".format(name, str(e).title())
     else:
         print >>sys.stderr, "Failed to initialize plugin {0}: Not in catalog!".format(name)
+
+
+def init_from_config():
+    plugins = []
+    for plugin in rapport.config.plugins():
+        plugins.append(init(**plugin))
+    return filter(bool, plugins)
 
 
 def catalog():
