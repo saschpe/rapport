@@ -83,6 +83,10 @@ def get(section, option):
     return CONF.get(section, option)
 
 
+def get_int(section, option):
+    return int(get(section, option))
+
+
 def plugins():
     for section in CONF.sections():
         if section.startswith("plugin:"):
