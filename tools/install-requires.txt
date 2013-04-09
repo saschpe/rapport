@@ -1,4 +1,5 @@
 argparse
+futures
 launchpadlib
 lxml
 Jinja2

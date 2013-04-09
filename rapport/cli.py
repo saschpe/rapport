@@ -22,6 +22,10 @@ import argparse
 import getpass
 import os
 import sys
+if sys.version_info > (3, 3):
+    import concurrent.futures as futures
+else:
+    import futures
 
 # Custom hack for running rapport/cli inside the development tree:
 if __name__ == "__main__":
@@ -43,9 +47,10 @@ class CLI(object):
         self.timeframe = rapport.timeframe.init_from_config()
 
     def collect(self):
-        for plugin in self.plugins:
-            result_json = plugin.collect(self.timeframe)
-            print "Result for {0}: {1}".format(plugin.alias, result_json)
+        with futures.ThreadPoolExecutor(max_workers=4) as executor:
+           fs = dict((executor.submit(p.collect, self.timeframe), p.alias) for p in self.plugins)
+           for future in futures.as_completed(fs):
+               print "Result for {0}: {1}".format(fs[future], future.result())
 
     def generate(self):
         pass
