@@ -6,3 +6,4 @@ Jinja2
 paramiko
 python-bugzilla
 requests
+tweepy
