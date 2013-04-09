@@ -20,12 +20,12 @@ Launchpad plugin.
 
 from launchpadlib.launchpad import Launchpad
 
-from rapport.collector import Collector
+import rapport.plugin
 
 
-class LaunchpadCollector(Collector):
+class LaunchpadPlugin(rapport.plugin.Plugin):
     def __init__(self, *args, **kwargs):
-        super(LaunchpadCollector, self).__init__(*args, **kwargs)
+        super(LaunchpadPlugin, self).__init__(*args, **kwargs)
 
         self.lp = Launchpad.login_anonymously(self.login, 'production')
 
@@ -37,3 +37,6 @@ class LaunchpadCollector(Collector):
 
         #TODO: Try to find some useful info
         return self._results()
+
+
+rapport.plugin.register("launchpad", LaunchpadPlugin)

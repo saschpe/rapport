@@ -18,16 +18,16 @@
 Bugzilla plugin.
 """
 
+# Avoid name clash with global "bugzilla" module from python-bugzilla:
 from __future__ import absolute_import
-
 import bugzilla
 
-from rapport.collector import Collector
+import rapport.plugin
 
 
-class BugzillaCollector(Collector):
+class BugzillaPlugin(rapport.plugin.Plugin):
     def __init__(self, email, *args, **kwargs):
-        super(BugzillaCollector, self).__init__(*args, **kwargs)
+        super(BugzillaPlugin, self).__init__(*args, **kwargs)
         self.email = email
 
         url = "{0}/xmlrpc.cgi".format(self.url.geturl())
@@ -43,3 +43,6 @@ class BugzillaCollector(Collector):
 
         return self._results({"email": self.email, "open_bugs": open_bugs,
                               "closed_bugs": closed_bugs})
+
+
+rapport.plugin.register("bugzilla", BugzillaPlugin)

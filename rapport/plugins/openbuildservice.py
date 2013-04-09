@@ -21,12 +21,12 @@ Open Build Service plugin.
 import lxml.etree
 import requests
 
-from rapport.collector import Collector
+import rapport.plugin
 
 
-class OpenBuildServiceCollector(Collector):
+class OpenBuildServicePlugin(rapport.plugin.Plugin):
     def __init__(self, *args, **kwargs):
-        super(OpenBuildServiceCollector, self).__init__(*args, **kwargs)
+        super(OpenBuildServicePlugin, self).__init__(*args, **kwargs)
 
     def _get_xml(self, url):
         response = requests.get(url, auth=(self.login, self.password))
@@ -48,3 +48,6 @@ class OpenBuildServiceCollector(Collector):
 
         for project in user_projects:
             requests = self._get_xml("{0}/request?view=collection&user={1}&project={2}".format(self.url.geturl(), self.login, project))
+
+
+rapport.plugin.register("openbuildservice", OpenBuildServicePlugin)

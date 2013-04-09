@@ -18,12 +18,15 @@
 Trello plugin.
 """
 
-from rapport.collector import Collector
+import rapport.plugin
 
 
-class TrelloCollector(Collector):
+class TrelloPlugin(rapport.plugin.Plugin):
     def __init__(self, *args, **kwargs):
-        super(TrelloCollector, self).__init__(*args, **kwargs)
+        super(TrelloPlugin, self).__init__(*args, **kwargs)
 
     def collect(self, timeframe):
         return self._results()
+
+
+rapport.plugin.register("trello", TrelloPlugin)

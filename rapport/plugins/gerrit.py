@@ -23,13 +23,12 @@ from datetime import datetime
 
 import paramiko
 
+import rapport.plugin
 
-from rapport.collector import Collector
 
-
-class GerritCollector(Collector):
+class GerritPlugin(rapport.plugin.Plugin):
     def __init__(self, *args, **kwargs):
-        super(GerritCollector, self).__init__(*args, **kwargs)
+        super(GerritPlugin, self).__init__(*args, **kwargs)
 
         self._client = paramiko.SSHClient()
         self._client.load_system_host_keys()
@@ -66,8 +65,4 @@ class GerritCollector(Collector):
         return self._results({"changes": changes})
 
 
-#class GerritTemplateRenderer(TemplateRenderer):
-#   def render(self):
-#       results = self.collect()
-#       template = Plugin.template_env.get_template("gerrit.txt")
-#       return template.render(results)
+rapport.plugin.register("gerrit", GerritPlugin)

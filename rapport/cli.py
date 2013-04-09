@@ -23,38 +23,88 @@ import getpass
 import os
 import sys
 
+# Custom hack for running rapport/cli inside the development tree:
+if __name__ == "__main__":
+    sys.path.append(os.getcwd())
+
+import rapport
+import rapport.config
+import rapport.plugin
+
 
 class RapportCLI(object):
     def __init__(self):
+        rapport.plugin.discover()
+        rapport.config.configure()
+
+        self.plugins = []
+        for plugin in rapport.config.plugins():
+            self.plugins.append(rapport.plugin.init(**plugin))
+
+    def _collect(self):
+
+       #timeframe = CurrentWeekTimeframe()
+
+       #gc = GerritCollector(alias="roo",
+       #                     url="ssh://review.openstack.org:29418",
+       #                     login="saschpe")
+
+       #bnc = BugzillaCollector(alias="bnc",
+       #                        url="https://bugzilla.novell.com",
+       #                        login="saschpe",
+       #                        password="wioX9qud")
+
+       #collectors = []
+       #print gc.collect(timeframe)
+       #for plugin in plugins:
+       #    result_json = plugin.collect()
+       #    print result_json
+        pass
+
+    def _generate(self):
+        pass
+
+    def _edit(self):
+        pass
+
+    def _send(self):
         pass
 
     def main(self, argv):
         parser = argparse.ArgumentParser()
+        parser.add_argument("--version", action="version",
+                            version="rapport {0}".format(rapport.__version__))
+        subparsers = parser.add_subparsers(title="commands")
 
+        parser_collect = subparsers.add_parser("collect", help="collect activities from various sources")
+        parser_collect.add_argument("source", nargs="?", help="specific source")
+        parser_collect.set_defaults(func=self._collect)
 
-        from rapport.plugins.gerrit import GerritCollector
-        from rapport.plugins.bugzilla import BugzillaCollector
-        from rapport.timeframe import CurrentWeekTimeframe
+       #parser_generate = subparsers.add_parser("generate", help="generate template from collected data")
+       ##parser_generate.add_argument("source", nargs="?", help="specific source")
+       ##parser_create.add_argument("-t", "--type", default="text", nargs="?", help="work report type (text, html)")
+       #parser_generate.set_defaults(func=self._generate)
 
-        timeframe = CurrentWeekTimeframe()
+       #parser_edit = subparsers.add_parser("edit", help="edit report prior to sending")
+       #parser_edit.set_defaults(func=self._edit)
 
-        gc = GerritCollector(alias="roo",
-                             url="ssh://review.openstack.org:29418",
-                             login="saschpe")
+       #parser_send = subparsers.add_parser("send", help="send work report")
+       ##parser_generate.add_argument("destination", nargs="+", help="")
+       #parser_send.set_defaults(func=self._send)
 
-        bnc = BugzillaCollector(alias="bnc",
-                                url="https://bugzilla.novell.com",
-                                login="saschpe",
-                                password="wioX9qud")
-        print gc.collect(timeframe)
+       #parser_help = subparsers.add_parser("help", help="show this help")
+       #parser_help.set_defaults(func=lambda args: parser.print_help())
+
+        args = parser.parse_args()
+        args.func(args)
 
 
 def main():
-    try:
+   #try:
         RapportCLI().main(sys.argv[1:])
-    except Exception as e:
-        print >> sys.stderr, e
-        sys.exit(1)
+   #except Exception as e:
+   #    print >> sys.stderr, e
+   #    sys.exit(1)
 
 
 if __name__ == "__main__":

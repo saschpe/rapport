@@ -14,10 +14,8 @@
 # Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
-"""
-"""
-
 import os
+#import site
 import ConfigParser
 
 
@@ -31,23 +29,10 @@ def _get_config_dirs():
     """
     config_dirs = [
         os.path.expanduser(os.path.join("~", ".rapport")),
-        os.path.join("etc", "rapport"),
-        os.path.abspath(".")
+        os.path.join("/", "etc", "rapport"),
+        os.path.abspath("config")
     ]
     return config_dirs
-
-
-def _get_plugin_dirs():
-    """Return a list of directories where plugins may be located.
-    """
-    return map(lambda d: os.path.join(d, "plugins"), _get_config_dirs())
-
-
-def _get_template_dirs():
-    """Return a list of directories where templates may be located.
-    """
-    return map(lambda d: os.path.join(d, "templates"), _get_config_dirs())
-    return template_dirs
 
 
 def find_config_files():
@@ -63,15 +48,41 @@ def find_config_files():
     return filter(bool, config_files)
 
 
-def find_plugin_files():
-    """Return a list of rapport plugin files.
+def init_user():
+    """Create and populate the ~/.rapport directory tree if it's not existing.
+
+    Doesn't interfere with already existing directories or configuration files.
     """
-    plugin_files = []
+    conf_dir = os.path.expanduser(os.path.join("~", ".rapport")),
+    conf_file = os.path.join(conf_dir, "rapport.conf")
 
-    for plugin_dir in _get_plugin_dirs():
-        if os.path.isdir(plugin_dir):
-            for plugin_file in os.listdir(plugin_dir):
-                if plugin_file.endswith(".py"):
-                    plugin_files.append(os.path.join(plugin_dir, plugin_file))
+    # TODO: Add verbosity
+    if not os.path.isdir(conf_dir):
+        os.mkdir(conf_dir)
+        for subdir in ["plugins", "reports", "templates"]:
+            conf_subdir = os.path.join(conf_dir, subdir)
+            if not os.path.isdir(conf_subdir):
+                os.mkdir(conf_subdir)
 
-    return filter(bool, plugin_files)
+    if not os.path.isfile(conf_file):
+        #TODO: Copy default config file here
+        pass
+
+
+CONF = None
+def configure():
+    global CONF
+    config = ConfigParser.SafeConfigParser()
+    config.read(find_config_files()[0])
+    CONF = config
+    return CONF
+
+
+def plugins():
+    for section in CONF.sections():
+        if section.startswith("plugin:"):
+            name, alias = section.split(":")[1:]
+            plugin = {"name": name, "alias": alias}
+            for option in CONF.options(section):
+                plugin[option] = CONF.get(section, option)
+            yield plugin
