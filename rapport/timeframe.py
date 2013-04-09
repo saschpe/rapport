@@ -117,7 +117,7 @@ def init(name, *args, **kwargs):
     """Instantiate a timeframe from the catalog.
     """
     if name in _TIMEFRAME_CATALOG:
-        if rapport.config.get("rapport", "verbosity") >= 2:
+        if rapport.config.get_int("rapport", "verbosity") >= 2:
             print "Initialize timeframe {0}: {1} {2}".format(name, args, kwargs)
         try:
             return _TIMEFRAME_CATALOG[name](*args, **kwargs)
