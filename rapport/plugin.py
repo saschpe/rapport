@@ -131,7 +131,7 @@ def init(name, *args, **kwargs):
         try:
             return _PLUGIN_CATALOG[name](*args, **kwargs)
         except (ValueError, TypeError) as e:
-            print >>sys.stderr, "Failed to initialize plugin {0}: {1}!".format(name, str(e).title())
+            print >>sys.stderr, "Failed to initialize plugin {0}: {1}!".format(name, e)
     else:
         print >>sys.stderr, "Failed to initialize plugin {0}: Not in catalog!".format(name)
 

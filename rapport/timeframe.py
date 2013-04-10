@@ -122,7 +122,7 @@ def init(name, *args, **kwargs):
         try:
             return _TIMEFRAME_CATALOG[name](*args, **kwargs)
         except ValueError as e:
-            print >>sys.stderr, "Failed to initialize timeframe {0}: {1}!".format(name, str(e).title())
+            print >>sys.stderr, "Failed to initialize timeframe {0}: {1}!".format(name, e)
     else:
         print >>sys.stderr, "Failed to initialize timeframe {0}: Not in catalog!".format(name)
 
