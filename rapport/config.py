@@ -15,8 +15,11 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
 import os
+import shutil
 #import site
 import ConfigParser
+
+import rapport.config
 
 
 def _get_config_dirs():
@@ -53,19 +56,24 @@ def init_user():
 
     Doesn't interfere with already existing directories or configuration files.
     """
-    conf_dir = os.path.expanduser(os.path.join("~", ".rapport")),
-    conf_file = os.path.join(conf_dir, "rapport.conf")
+    user_conf_dir = os.path.expanduser(os.path.join("~", ".rapport"))
+    user_conf_file = os.path.join(user_conf_dir, "rapport.conf")
 
-    if not os.path.isdir(conf_dir):
-        os.mkdir(conf_dir)
-        for subdir in ["plugins", "reports", "templates"]:
-            conf_subdir = os.path.join(conf_dir, subdir)
-            if not os.path.isdir(conf_subdir):
-                os.mkdir(conf_subdir)
-
-    if not os.path.isfile(conf_file):
-        #TODO: Copy default config file here
-        pass
+    if not os.path.exists(user_conf_dir):
+        if rapport.config.get_int("rapport", "verbosity") >= 1:
+            print "Create user directory {0}".format(user_conf_dir)
+        os.mkdir(user_conf_dir)
+    for subdir in ["plugins", "reports", "templates"]:
+        user_conf_subdir = os.path.join(user_conf_dir, subdir)
+        if not os.path.exists(user_conf_subdir):
+            if rapport.config.get_int("rapport", "verbosity") >= 1:
+                print "Create user directory {0}".format(user_conf_subdir)
+            os.mkdir(user_conf_subdir)
+    if not os.path.exists(user_conf_file):
+        if rapport.config.get_int("rapport", "verbosity") >= 1:
+            print "Create user configuration {0}".format(user_conf_file)
+        default_config = find_config_files()
+        shutil.copyfile(default_config[0], user_conf_file)
 
 
 CONF = None
