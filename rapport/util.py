@@ -14,6 +14,10 @@
 # Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
+"""Various utility functions.
+"""
+
+import datetime
 import re
 import subprocess
 
@@ -42,3 +46,11 @@ def silent_popen(args, **kwargs):
     return subprocess.Popen(args,
                             stderr=subprocess.STDOUT,
                             stdout=subprocess.PIPE, **kwargs).communicate()[0]
+
+
+def datetime_from_iso8601(string):
+    """Small helper that parses ISO-8601 date strings.
+    """
+    if string.endswith("Z"):
+        string = string[:-1]  # Date string is UTC
+    return datetime.datetime.strptime(string, "%Y-%m-%dT%H:%M:%S.%f")
