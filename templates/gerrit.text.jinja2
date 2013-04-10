@@ -2,5 +2,5 @@
 [gerrit: {{ url.hostname }}]
 {%- for change in changes %}
 - {{ change.number }}: {{ change.subject }}
-{% endfor -%}
-{% endif -%}
+{%- endfor -%}
+{% endif %}
