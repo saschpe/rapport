@@ -8,7 +8,11 @@
  commented
 {% endif %}
 {% if create_events %}
-- {{ create_events|length }} repositories created:
+{% trans count=create_events|length %}
+- {{ count }} repository created:
+{% pluralize %}
+- {{ count }} repositories created:
+{% endtrans %}
 {% for create_event in create_events %}
   + {{ create_event.repo.name }}
 {% endfor %}
@@ -19,10 +23,18 @@
 {% endif %}
 #}
 {% if gist_events %}
-- {{ gist_events|length }} gists
+{% trans count=gist_events|length %}
+- {{ count }} gist
+{% pluralize %}
+- {{ count }} gists
+{% endtrans %}
 {% endif %}
 {% if gollum_events %}
-- {{ gollum_events|length }} overall page edits:
+{% trans count=gollum_events|length %}
+- {{ count }} page edit:
+{% pluralize %}
+- {{ count }} page edits:
+{% endtrans %}
 {% for repo, pages in gollum_events|groupby("repo.name") %}
   + {{ pages|length }} in {{ repo }}
 {% endfor %}
@@ -34,7 +46,11 @@
 {%- endfor %} issues
 {% endif %}
 {% if fork_events %}
-- {{ fork_events|length }} forked repositories:
+{% trans count=fork_events|length %}
+- {{ count }} forked repository:
+{% pluralize %}
+- {{ count }} forked repositories:
+{% endtrans %}
 {% for fork_event in fork_events %}
   + {{ fork_event.payload.forkee.full_name }} from {{ fork_event.repo.name }}
 {% endfor %}
@@ -46,9 +62,17 @@
 {% endfor %} pull requests
 {% endif %}
 {% if push_events %}
-- {{ push_events|length }} push events summing up to:
+{% trans count=push_events|length %}
+- {{ count }} push event summing up to:
+{% pluralize %}
+- {{ count }} push events summing up to:
+{% endtrans %}
 {% for repo, pushs in push_events|groupby("repo.name") %}
-  + {{ pushs|sum(attribute="payload.size") }} commits to {{ repo }}
+{% trans count=pushs|sum(attribute="payload.size")%}
+  + {{ count }} commit to {{ repo }}
+{% pluralize %}
+  + {{ count }} commits to {{ repo }}
+{% endtrans %}
 {% endfor %}
 {% endif %}
 {# Do these matter?

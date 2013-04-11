@@ -1,12 +1,24 @@
 {% if tweets or retweets or mentions %}
 [twitter]
 {% if tweets %}
-- {{ tweets|length }} tweets
+{% trans count=tweets|length %}
+- {{ count }} tweet
+{% pluralize %}
+- {{ count }} tweets
+{% endtrans %}
 {% endif %}
 {% if retweets %}
-- {{ retweets|length }} retweets by others
+{% trans count=retweets|length %}
+- {{ count }} retweet by others
+{% pluralize %}
+- {{ count }} retweets by others
+{% endtrans %}
 {% endif %}
 {% if mentions %}
-- {{ mentions|length }} mentions by others
+{% trans count=mentions|length %}
+- {{ count }} mention by others
+{% pluralize %}
+- {{ count }} mentions by others
+{% endtrans %}
 {% endif %}
 {% endif %}

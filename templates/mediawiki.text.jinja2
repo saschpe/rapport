@@ -1,6 +1,15 @@
 {% if edits %}
 [mediawiki: {{ url.hostname }}]
+{% trans count=edits|length %}
+- {{ count }} page edit:
+{% pluralize %}
+- {{ count }} page edits:
+{% endtrans %}
 {% for page, edits in edits|groupby("title") %}
-- {{ edits|length }} edits on page {{ page }}
+{% trans count=edits|length %}
+  + {{ count }} edit on page {{ page }}
+{% pluralize %}
+  + {{ count }} edits on page {{ page }}
+{% endtrans %}
 {% endfor %}
 {% endif %}

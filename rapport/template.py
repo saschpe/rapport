@@ -31,7 +31,9 @@ def _get_template_dirs():
 
 
 _JINJA2_ENV = jinja2.Environment(loader=jinja2.FileSystemLoader(_get_template_dirs()),
+                                 extensions=["jinja2.ext.i18n"],
                                  trim_blocks=True)
+_JINJA2_ENV.install_null_translations(newstyle=False)
 
 
 def get_template(plugin, type):

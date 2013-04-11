@@ -1,22 +1,42 @@
 {%if boards or open_cards or closed_cards or due_cards %}
 [trello]
 {%if open_boards %}
-- {{ open_boards|length }} open boards
+{% trans count=open_boards|length %}
+- {{ count }} open board
+{% pluralize %}
+- {{ count }} open boards
+{% endtrans %}
 {% endif %}
 {%if closed_boards %}
-- {{ closed_boards|length }} closed boards
+{% trans count=closed_boards|length %}
+- {{ count }} closed board
+{% pluralize %}
+- {{ count }} closed boards
+{% endtrans %}
 {% endif %}
 {%if open_cards %}
-- {{ open_cards|length }} open assigned cards
+{% trans count=open_cards|length %}
+- {{ count }} open assigned card
+{% pluralize %}
+- {{ count }} open assigned cards
+{% endtrans %}
 {% endif %}
 {% if closed_cards %}
-- {{ closed_cards|length }} closed assigned cards:
+{% trans count=closed_cards|length %}
+- {{ count }} closed assigned card:
+{% pluralize %}
+- {{ count }} closed assigned cards:
+{% endtrans %}
 {% for card in closed_cards %}
   + {{ card.name }}
 {% endfor %}
 {% endif %}
 {%if due_cards %}
-- {{ due_cards|length }} due assigned cards:
+{% trans count=due_cards|length %}
+- {{ count }} due assigned card:
+{% pluralize %}
+- {{ count }} due assigned cards:
+{% endtrans %}
 {% for card in due_cards %}
   + {{ card.name }}
 {% endfor %}
