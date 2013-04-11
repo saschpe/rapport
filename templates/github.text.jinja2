@@ -23,14 +23,14 @@
 {% endif %}
 {% if gollum_events %}
 - {{ gollum_events|length }} overall page edits:
-{% for grouper, list in gollum_events|groupby("repo.name") %}
-  + {{ list|length }} in {{ grouper }}
+{% for repo, pages in gollum_events|groupby("repo.name") %}
+  + {{ pages|length }} in {{ repo }}
 {% endfor %}
 {% endif %}
 {% if issues_events %}
 - 
-{%- for grouper, list in issues_events|groupby("payload.action") %}
-{% if loop.first %} {% else %} and {% endif %}{{ list|length }} {{ grouper }}
+{%- for action, issues in issues_events|groupby("payload.action") %}
+{% if loop.first %} {% else %} and {% endif %}{{ issues|length }} {{ action }}
 {%- endfor %} issues
 {% endif %}
 {% if fork_events %}
@@ -41,14 +41,14 @@
 {% endif %}
 {% if pull_request_events %}
 - 
-{%- for grouper, list in pull_request_events|groupby("payload.action") %}
-{% if loop.first %} {% else %} and {% endif %}{{ list|length }} {{ grouper }}
-{% endfor %}
+{%- for action, pulls in pull_request_events|groupby("payload.action") %}
+{% if loop.first %} {% else %} and {% endif %}{{ pulls|length }} {{ action }}
+{% endfor %} pull requests
 {% endif %}
 {% if push_events %}
-- {{ push_events|length }} overall commits:
-{% for grouper, list in push_events|groupby("repo.name") %}
-  + {{ list|length }} in {{ grouper }}
+- {{ push_events|length }} push events summing up to:
+{% for repo, pushs in push_events|groupby("repo.name") %}
+  + {{ pushs|sum(attribute="payload.size") }} commits to {{ repo }}
 {% endfor %}
 {% endif %}
 {# Do these matter?
