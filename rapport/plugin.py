@@ -15,6 +15,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
 import os
+import site
 import sys
 import traceback
 import urlparse
@@ -78,8 +79,8 @@ def _get_plugin_dirs():
     """
     plugin_dirs = [
         os.path.expanduser(os.path.join("~", ".rapport", "plugins")),
-        os.path.join("rapport", "plugins")
-    ]  # + map(lambda d: os.path.join(d, "rapport", "plugins"), site.getsitepackages())
+        os.path.join("rapport", "plugins")  # Local dev tree
+    ]  + map(lambda d: os.path.join(d, "rapport", "plugins"), site.getsitepackages())
     return plugin_dirs
 
 
