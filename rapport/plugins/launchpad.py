@@ -18,6 +18,9 @@
 Launchpad plugin.
 """
 
+import warnings
+
+warnings.filterwarnings('ignore', 'Module argparse was already imported')   # Filter a UserWarning from Jinja2
 from launchpadlib.launchpad import Launchpad
 
 import rapport.plugin
