@@ -18,8 +18,9 @@
 Github plugin.
 """
 
-import json
 import collections
+import json
+import re
 
 import requests
 
@@ -37,6 +38,9 @@ class GithubPlugin(rapport.plugin.Plugin):
         link_url = None
         if "link" in response.headers:
             link_url = response.headers["link"]
+            if link_url.startswith("<"):
+                # If URL looks like this: '<https://api.github.com/user/$ID/events?page=2>; rel="next"'
+                link_url = re.match("<(.*)>; rel.*", link_url).groups()[0]
         return json.loads(response.text), link_url
 
     def collect(self, timeframe):
