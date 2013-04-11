@@ -1,0 +1,59 @@
+{% if events %}
+[github]
+{% if commit_comment_events or issues_comment_events or  pull_request_review_comment_events %}
+- 
+{%- if commit_comment_events %} {{ commit_comment_events|length }} commits{% endif %}
+{%- if issues_comment_events %}{% if commit_comment_events %} and {% endif %}{{ issues_comment_events|length }} issues{% endif %}
+{%- if pull_request_review_comment_events %}{% if issues_comment_events or (commit_comment_events and not issues_comment_events) %} and {% endif %}{{ pull_request_review_comment_events|length }} pull request reviews{% endif %}
+ commented
+{% endif %}
+{% if create_events %}
+- {{ create_events|length }} repositories created:
+{% for create_event in create_events %}
+  + {{ create_event.repo.name }}
+{% endfor %}
+{% endif %}
+{# Do we need info about deleted branches or tags?
+{% if delete_events %}
+- {{ delete_events|length }} deleted repositories
+{% endif %}
+#}
+{% if gist_events %}
+- {{ gist_events|length }} gists
+{% endif %}
+{% if gollum_events %}
+- {{ gollum_events|length }} overall page edits:
+{% for grouper, list in gollum_events|groupby("repo.name") %}
+  + {{ list|length }} in {{ grouper }}
+{% endfor %}
+{% endif %}
+{% if issues_events %}
+- 
+{%- for grouper, list in issues_events|groupby("payload.action") %}
+{% if loop.first %} {% else %} and {% endif %}{{ list|length }} {{ grouper }}
+{%- endfor %} issues
+{% endif %}
+{% if fork_events %}
+- {{ fork_events|length }} forked repositories:
+{% for fork_event in fork_events %}
+  + {{ fork_event.payload.forkee.full_name }} from {{ fork_event.repo.name }}
+{% endfor %}
+{% endif %}
+{% if pull_request_events %}
+- 
+{%- for grouper, list in pull_request_events|groupby("payload.action") %}
+{% if loop.first %} {% else %} and {% endif %}{{ list|length }} {{ grouper }}
+{% endfor %}
+{% endif %}
+{% if push_events %}
+- {{ push_events|length }} overall commits:
+{% for grouper, list in push_events|groupby("repo.name") %}
+  + {{ list|length }} in {{ grouper }}
+{% endfor %}
+{% endif %}
+{# Do these matter?
+{% if team_add_events %}
+- team add events
+{% endif %}
+#}
+{% endif %}
