@@ -11,7 +11,9 @@ Features
 - Asyncronously collects data from various resources:
   + Bugzilla
   + Gerrit
+  + Github
   + Launchpad
+  + MediaWiki
   + OpenBuildService
   + Trello
   + Twitter
