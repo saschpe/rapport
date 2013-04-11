@@ -15,31 +15,39 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
 import os
+import site
 import sys
 
 import jinja2
 
 
-def _get_template_dirs():
+def _get_template_dirs(type="plugin"):
     """Return a list of directories where templates may be located.
     """
     template_dirs = [
-        os.path.expanduser(os.path.join("~", ".rapport", "templates")),
-        os.path.join("templates")
-    ]  # + map(lambda d: os.path.join(d, "rapport", "templates"), site.getsitepackages())
+        os.path.expanduser(os.path.join("~", ".rapport", "templates", type)),
+        os.path.join("templates", type)  # Local dev tree
+    ]  + map(lambda d: os.path.join(d, "rapport", "templates", type), site.getsitepackages())
     return template_dirs
 
 
-_JINJA2_ENV = jinja2.Environment(loader=jinja2.FileSystemLoader(_get_template_dirs()),
+_JINJA2_ENV = {}
+def init():
+    for type in ["plugin", "email", "web"]:
+        loader = jinja2.FileSystemLoader(_get_template_dirs(type))
+        env = jinja2.Environment(loader=loader,
                                  extensions=["jinja2.ext.i18n"],
                                  trim_blocks=True)
-_JINJA2_ENV.install_null_translations(newstyle=False)
+        env.install_null_translations(newstyle=False)
+        _JINJA2_ENV[type] = env
 
 
-def get_template(plugin, type):
-    template_name = "{0}.{1}.jinja2".format(plugin, type)
+def get_template(name, format="text", type="plugin"):
+    if not _JINJA2_ENV:
+        init()
+    template_name = "{0}.{1}.jinja2".format(name, format)
     try:
-        return _JINJA2_ENV.get_template(template_name)
+        return _JINJA2_ENV[type].get_template(template_name)
     except jinja2.TemplateNotFound as e:
-        print >>sys.stderr, "Missing {0} {1} template!".format(plugin, type)
+        print >>sys.stderr, "Missing template {0}/{1}!".format(type, template_name)
 

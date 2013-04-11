@@ -62,13 +62,13 @@ def init_user():
     if not os.path.exists(user_conf_dir):
         if rapport.config.get_int("rapport", "verbosity") >= 1:
             print "Create user directory {0}".format(user_conf_dir)
-        os.mkdir(user_conf_dir)
-    for subdir in ["plugins", "reports", "templates"]:
+        os.makedirs(user_conf_dir)
+    for subdir in ["plugins", "reports", "templates/plugin", "templates/email", "templates/web"]:
         user_conf_subdir = os.path.join(user_conf_dir, subdir)
         if not os.path.exists(user_conf_subdir):
             if rapport.config.get_int("rapport", "verbosity") >= 1:
                 print "Create user directory {0}".format(user_conf_subdir)
-            os.mkdir(user_conf_subdir)
+            os.makedirs(user_conf_subdir)
     if not os.path.exists(user_conf_file):
         if rapport.config.get_int("rapport", "verbosity") >= 1:
             print "Create user configuration {0}".format(user_conf_file)
