@@ -48,9 +48,17 @@ def silent_popen(args, **kwargs):
                             stdout=subprocess.PIPE, **kwargs).communicate()[0]
 
 
-def datetime_from_iso8601(string):
-    """Small helper that parses ISO-8601 date strings.
+def datetime_from_iso8601(date):
+    """Small helper that parses ISO-8601 date dates.
+
+        >>> datetime_from_iso8601("2013-04-10T12:52:39")
+        datetime.datetime(2013, 4, 10, 12, 52, 39)
+        >>> datetime_from_iso8601("2013-01-07T12:55:19.257")
+        datetime.datetime(2013, 1, 7, 12, 55, 19, 257000)
     """
-    if string.endswith("Z"):
-        string = string[:-1]  # Date string is UTC
-    return datetime.datetime.strptime(string, "%Y-%m-%dT%H:%M:%S.%f")
+    format = "%Y-%m-%dT%H:%M:%S"
+    if date.endswith("Z"):
+        date = date[:-1]  # Date date is UTC
+    if re.match(".*\.\d+", date):
+        format += ".%f"  # Date includes microseconds
+    return datetime.datetime.strptime(date, format)
