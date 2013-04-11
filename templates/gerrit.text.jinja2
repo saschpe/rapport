@@ -1,6 +1,6 @@
-{% if changes|length > 0 %}
+{% if changes %}
 [gerrit: {{ url.hostname }}]
-{%- for change in changes %}
+{% for change in changes %}
 - {{ change.number }}: {{ change.subject }}
-{%- endfor -%}
+{% endfor %}
 {% endif %}

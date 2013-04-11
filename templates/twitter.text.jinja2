@@ -1,6 +1,12 @@
-{% if tweets|length > 0 or retweets|length > 0 or mentions|length > 0 %}
+{% if tweets or retweets or mentions %}
 [twitter]
-{% if tweets|length > 0 -%}- {{ tweets|length }} tweets{% endif -%}
-{% if retweets|length > 0 -%}- {{ retweets|length }} retweets by others{% endif -%}
-{% if mentions|length > 0 -%}- {{ mentions|length }} mentions by others{% endif -%}
+{% if tweets %}
+- {{ tweets|length }} tweets
+{% endif %}
+{% if retweets %}
+- {{ retweets|length }} retweets by others
+{% endif %}
+{% if mentions %}
+- {{ mentions|length }} mentions by others
+{% endif %}
 {% endif %}

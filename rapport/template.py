@@ -30,7 +30,8 @@ def _get_template_dirs():
     return template_dirs
 
 
-_JINJA2_ENV = jinja2.Environment(loader=jinja2.FileSystemLoader(_get_template_dirs()))
+_JINJA2_ENV = jinja2.Environment(loader=jinja2.FileSystemLoader(_get_template_dirs()),
+                                 trim_blocks=True)
 
 
 def get_template(plugin, type):

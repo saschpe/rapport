@@ -1,18 +1,24 @@
-{%if boards|length > 0 or open_cards|length > 0 or closed_cards|length > 0 or due_cards|length > 0 %}
+{%if boards or open_cards or closed_cards or due_cards %}
 [trello]
-{%if open_boards|length > 0 -%}- {{ open_boards|length }} open boards{% endif %}
-{%if closed_boards|length > 0 -%}- {{ closed_boards|length }} closed boards{% endif %}
-{%if open_cards|length > 0 -%}- {{ open_cards|length }} open assigned cards{% endif %}
-{% if closed_cards|length > 0 -%}
+{%if open_boards %}
+- {{ open_boards|length }} open boards
+{% endif %}
+{%if closed_boards %}
+- {{ closed_boards|length }} closed boards
+{% endif %}
+{%if open_cards %}
+- {{ open_cards|length }} open assigned cards
+{% endif %}
+{% if closed_cards %}
 - {{ closed_cards|length }} closed assigned cards:
-{%- for card in closed_cards %}
+{% for card in closed_cards %}
   + {{ card.name }}
-{%- endfor -%}
-{% endif -%}
-{%if due_cards|length > 0 -%}
+{% endfor %}
+{% endif %}
+{%if due_cards %}
 - {{ due_cards|length }} due assigned cards:
-{%- for card in due_cards %}
+{% for card in due_cards %}
   + {{ card.name }}
-{%- endfor -%}
-{% endif -%}
-{% endif -%}
+{% endfor %}
+{% endif %}
+{% endif %}
