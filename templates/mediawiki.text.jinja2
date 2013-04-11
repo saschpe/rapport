@@ -1,0 +1,6 @@
+{% if edits %}
+[mediawiki: {{ url.hostname }}]
+{% for page, edits in edits|groupby("title") %}
+- {{ edits|length }} edits on page {{ page }}
+{% endfor %}
+{% endif %}
