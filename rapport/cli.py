@@ -49,6 +49,7 @@ class CLI(object):
         self.timeframe = rapport.timeframe.init_from_config()
 
     def create(self):
+        results = {}
         with futures.ThreadPoolExecutor(max_workers=4) as executor:
             plugin_futures = dict((executor.submit(p.collect, self.timeframe), p) for p in self.plugins)
             for future in futures.as_completed(plugin_futures):
@@ -58,9 +59,18 @@ class CLI(object):
                         print "Result for {0}: {1}".format(plugin.alias, future.result())
                     template = rapport.template.get_template(plugin, "text")
                     if template:
-                        print template.render(future.result())
+                        results[plugin] = template.render(future.result())
                 except Exception as e:
                     print >>sys.stderr, "Failed plugin {0}:{1}: {2}!".format(plugin, plugin.alias, e)
+
+        # Print results sorted by plugin appearance in config file (i.e. init order):
+        for plugin in self.plugins:
+            try:
+                print results[plugin]
+            except KeyError as e:
+                # A missing result for plugins means an exception happened
+                # above, which already printed an error message, thus:
+                pass
 
 
    #def edit(self):
