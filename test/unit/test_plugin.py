@@ -18,12 +18,10 @@
 import os
 import unittest
 
-import rapport.config
+import rapport.plugin
 
 
-class ConfigTestCase(unittest.TestCase):
-    def test__get_config_dirs(self):
-        config_dirs = rapport.config._get_config_dirs()
-        self.assertIn(os.path.expanduser(os.path.join("~", ".rapport")), config_dirs)
-        self.assertIn(os.path.join("/etc", "rapport"), config_dirs)
-        self.assertIn(os.path.abspath("config"), config_dirs)
+class PluginTestCase(unittest.TestCase):
+    def test__get_plugin_dirs(self):
+        plugin_dirs = rapport.plugin._get_plugin_dirs()
+        self.assertIn(os.path.expanduser(os.path.join("~", ".rapport", "plugins")), plugin_dirs)

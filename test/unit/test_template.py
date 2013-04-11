@@ -18,12 +18,13 @@
 import os
 import unittest
 
-import rapport.config
+import rapport.template
 
 
-class ConfigTestCase(unittest.TestCase):
-    def test__get_config_dirs(self):
-        config_dirs = rapport.config._get_config_dirs()
-        self.assertIn(os.path.expanduser(os.path.join("~", ".rapport")), config_dirs)
-        self.assertIn(os.path.join("/etc", "rapport"), config_dirs)
-        self.assertIn(os.path.abspath("config"), config_dirs)
+class TemplateTestCase(unittest.TestCase):
+    def test__get_template_dirs(self):
+        for type in ["plugin", "email", "web"]:
+            template_dirs = rapport.template._get_template_dirs(type)
+            self.assertIn(os.path.expanduser(os.path.join("~", ".rapport", "templates", type)), template_dirs)
+            self.assertIn(os.path.join("templates", type), template_dirs)
+
