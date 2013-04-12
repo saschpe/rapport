@@ -15,7 +15,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
 """
-Command-line interface to the OpenStack Identity API.
+Command-line interface to rapport.
 """
 
 import argparse
@@ -55,13 +55,15 @@ class CLI(object):
             for future in futures.as_completed(plugin_futures):
                 plugin = plugin_futures[future]
                 try:
-                    if rapport.config.get_int("rapport", "verbosity") >= 1:
+                    if rapport.config.get_int("rapport", "verbosity") >= 2:
                         print "Result for {0}: {1}".format(plugin.alias, future.result())
                     template = rapport.template.get_template(plugin, "text")
                     if template:
                         results[plugin] = template.render(future.result())
                 except Exception as e:
                     print >>sys.stderr, "Failed plugin {0}:{1}: {2}!".format(plugin, plugin.alias, e)
+
+        # TODO: Generate mail template
 
         # Print results sorted by plugin appearance in config file (i.e. init order):
         for plugin in self.plugins:
