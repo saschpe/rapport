@@ -26,5 +26,5 @@ class TemplateTestCase(unittest.TestCase):
         for type in ["plugin", "email", "web"]:
             template_dirs = rapport.template._get_template_dirs(type)
             self.assertIn(os.path.expanduser(os.path.join("~", ".rapport", "templates", type)), template_dirs)
-            self.assertIn(os.path.join("templates", type), template_dirs)
+            self.assertIn(os.path.join("rapport", "templates", type), template_dirs)
 
