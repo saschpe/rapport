@@ -48,7 +48,7 @@ class CLI(object):
         self.plugins = rapport.plugin.init_from_config()
         self.timeframe = rapport.timeframe.init_from_config()
 
-    def create(self):
+    def create(self, args):
         results = {}
         with futures.ThreadPoolExecutor(max_workers=4) as executor:
             plugin_futures = dict((executor.submit(p.collect, self.timeframe), p) for p in self.plugins)
@@ -83,29 +83,30 @@ class CLI(object):
        #        pass
 
 
-   #def edit(self):
+   #def edit(self, args):
    #    pass
 
-    def main(self, argv):
+    def main(self):
         parser = argparse.ArgumentParser()
         parser.add_argument("--version", action="version", version="rapport {0}".format(rapport.__version__))
         subparsers = parser.add_subparsers(title="commands")
 
         parser_create = subparsers.add_parser("create", help="create work report")
-        parser_create.set_defaults(func=CLI.create(self))
+        parser_create.set_defaults(func=self.create)
 
        #parser_edit = subparsers.add_parser("edit", help="edit report prior to sending")
-       #parser_edit.set_defaults(func=CLI.edit)
+       #parser_edit.set_defaults(func=self.edit)
 
         parser_help = subparsers.add_parser("help", help="show this help")
         parser_help.set_defaults(func=lambda args: parser.print_help())
 
         args = parser.parse_args()
+        args.func(args)
 
 
 def main():
    #try:
-        CLI().main(sys.argv[1:])
+        CLI().main()
    #except Exception as e:
    #    print >> sys.stderr, e
    #    sys.exit(1)
