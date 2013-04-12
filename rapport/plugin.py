@@ -90,7 +90,10 @@ def _path_to_module(path):
         >>> _path_to_module("foo/bar.py")
         'foo.bar'
     """
-    return path.replace(os.sep, ".").rsplit(".", 1)[0]
+    if "site-packages" in path:
+        path = path.split("site-packages" + os.sep)[1]
+    path = path.replace(os.sep, ".").rsplit(".", 1)[0]
+    return path
 
 
 def discover():
