@@ -16,7 +16,6 @@
 
 import os
 import shutil
-#import site
 import ConfigParser
 
 import rapport.config
@@ -69,11 +68,19 @@ def init_user():
             if rapport.config.get_int("rapport", "verbosity") >= 1:
                 print "Create user directory {0}".format(user_conf_subdir)
             os.makedirs(user_conf_subdir)
+        if subdir == "reports" and not (os.stat(user_conf_subdir).st_mode & 0777) == 0700:
+            if rapport.config.get_int("rapport", "verbosity") >= 1:
+                print "Set secure directory permissions for {0}".format(user_conf_subdir)
+            os.chmod(user_conf_subdir, 0700)
     if not os.path.exists(user_conf_file):
         if rapport.config.get_int("rapport", "verbosity") >= 1:
             print "Create user configuration {0}".format(user_conf_file)
         default_config = find_config_files()
         shutil.copyfile(default_config[0], user_conf_file)
+    if not (os.stat(user_conf_file).st_mode & 0777) == 0600:
+        if rapport.config.get_int("rapport", "verbosity") >= 1:
+            print "Set secure file permissions for {0}".format(user_conf_file)
+        os.chmod(user_conf_file, 0600)
 
 
 CONF = None
