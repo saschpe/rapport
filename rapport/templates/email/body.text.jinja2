@@ -1,0 +1,9 @@
+{% block custom %}{% endblock %}
+
+---
+{% for plugin in plugins %}
+{% if plugin in results %}
+
+{{ results[plugin] }}
+{%- endif %}
+{% endfor %}

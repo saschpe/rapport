@@ -64,15 +64,23 @@ class CLI(object):
                     print >>sys.stderr, "Failed plugin {0}:{1}: {2}!".format(plugin, plugin.alias, e)
 
         # TODO: Generate mail template
+        #report = rapport.report.
 
-        # Print results sorted by plugin appearance in config file (i.e. init order):
-        for plugin in self.plugins:
-            try:
-                print results[plugin]
-            except KeyError as e:
-                # A missing result for plugins means an exception happened
-                # above, which already printed an error message, thus:
-                pass
+        template_email_subject = rapport.template.get_template("subject", type="email")
+        template_email_body = rapport.template.get_template("body", type="email")
+        #email_subject = template_email_subject.render(
+        email_body = template_email_body.render({"plugins": self.plugins, "results": results})
+        
+        print "X",email_body,"X"
+
+       ## Print results sorted by plugin appearance in config file (i.e. init order):
+       #for plugin in self.plugins:
+       #    try:
+       #        print results[plugin]
+       #    except KeyError as e:
+       #        # A missing result for plugins means an exception happened
+       #        # above, which already printed an error message, thus:
+       #        pass
 
 
    #def edit(self):
@@ -87,7 +95,7 @@ class CLI(object):
         parser_create.set_defaults(func=CLI.create(self))
 
        #parser_edit = subparsers.add_parser("edit", help="edit report prior to sending")
-       #parser_edit.set_defaults(func=CLI.edit(self))
+       #parser_edit.set_defaults(func=CLI.edit)
 
         parser_help = subparsers.add_parser("help", help="show this help")
         parser_help.set_defaults(func=lambda args: parser.print_help())

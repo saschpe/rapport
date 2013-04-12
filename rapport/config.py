@@ -50,6 +50,10 @@ def find_config_files():
     return filter(bool, config_files)
 
 
+def _get_reports_dir():
+    return os.path.expanduser(os.path.join("~", ".rapport", "reports")),
+
+
 def init_user():
     """Create and populate the ~/.rapport directory tree if it's not existing.
 
