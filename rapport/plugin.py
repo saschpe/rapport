@@ -87,11 +87,14 @@ def _get_plugin_dirs():
 def _path_to_module(path):
     """Translates paths to *.py? files into module paths.
 
-        >>> _path_to_module("foo/bar.py")
-        'foo.bar'
+        >>> _path_to_module("rapport/bar.py")
+        'rapport.bar'
+        >>> _path_to_module("/usr/lib/rapport/bar.py")
+        'rapport.bar'
     """
-    if "site-packages" in path:
-        path = path.split("site-packages" + os.sep)[1]
+    # Split of preceeding path elements:
+    path = "rapport" + path.split("rapport")[1]
+    # Split of ending and replace os.sep with dots:
     path = path.replace(os.sep, ".").rsplit(".", 1)[0]
     return path
 
