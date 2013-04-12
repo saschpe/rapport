@@ -9,12 +9,18 @@
 {% endif %}
 {% if create_events %}
 {% trans count=create_events|length %}
-- {{ count }} repository created:
+- {{ count }} create event:
 {% pluralize %}
-- {{ count }} repositories created:
+- {{ count }} create events:
 {% endtrans %}
-{% for create_event in create_events %}
-  + {{ create_event.repo.name }}
+{% for repo, events in create_events|groupby("repo.name") %}
+{% for type, list in events|groupby("payload.ref_type") %}
+{% trans count=list|length %}
+  + {{ count }} {{ type }} in {{ repo }}
+{% pluralize %}
+  + {{ count }} {{ type }}s in {{ repo }}
+{% endtrans %}
+{% endfor %}
 {% endfor %}
 {% endif %}
 {# Do we need info about deleted branches or tags?
