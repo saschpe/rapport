@@ -32,7 +32,7 @@ setup(
     name="rapport",
     version=rapport.__version__,
     license="GPLv2",
-    description=rapport.__doc__,
+    description="Work report generator for the lazy",
     long_description=open("README.rst").read(),
     author=rapport.__author__.rsplit(" ", 1)[0],
     author_email=rapport.__author__.rsplit(" ", 1)[1][1:-1],
