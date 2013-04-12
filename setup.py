@@ -48,7 +48,6 @@ setup(
     cmdclass=get_cmdclass(),
     tests_require=tests_requires,
     test_suite="nose.collector",
-    requires_python=">=2.7,<3",
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Console",
