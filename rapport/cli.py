@@ -65,19 +65,25 @@ class CLI(object):
 
         # TODO: Generate mail template
         # TODO: refactor this into appropriate modules:
-        template_email_subject = rapport.template.get_template("subject", type="email")
-        template_email_body = rapport.template.get_template("body", type="email")
-        #email_subject = template_email_subject.render(
-        email_body = template_email_body.render({"plugins": self.plugins, "results": results})
-        
-        report_path = os.path.expanduser(os.path.join("~", ".rapport", "reports", self.timeframe.end.isoformat()))
+
+        render_date = self.timeframe.end
+        report_path = os.path.expanduser(os.path.join("~", ".rapport", "reports", render_date.isoformat()))
         if not os.path.exists(report_path):
             os.makedirs(report_path)
-        report_file = os.path.join(report_path, "email.body.text")
-        with open(report_file, "w") as report:
+
+        template_email_body = rapport.template.get_template("body", type="email")
+        email_body = template_email_body.render({"plugins": self.plugins, "results": results})
+        email_body_file = os.path.join(report_path, "email.body.text")
+        with open(email_body_file, "w") as report:
             report.write(email_body)
 
-        print "Your work report ({0}):\n{1}".format(report_file, email_body)
+        template_email_subject = rapport.template.get_template("subject", type="email")
+        email_subject = template_email_subject.render({"login": rapport.config.get("user", "login"), "date": render_date.date().isoformat()})
+        email_subject_file = os.path.join(report_path, "email.subject.text")
+        with open(email_subject_file, "w") as report:
+            report.write(email_subject)
+
+        print "Your work report ({0}):\n{1}".format(email_body_file, email_body)
 
        ## Print results sorted by plugin appearance in config file (i.e. init order):
        #for plugin in self.plugins:
