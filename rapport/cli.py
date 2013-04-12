@@ -64,14 +64,20 @@ class CLI(object):
                     print >>sys.stderr, "Failed plugin {0}:{1}: {2}!".format(plugin, plugin.alias, e)
 
         # TODO: Generate mail template
-        #report = rapport.report.
-
+        # TODO: refactor this into appropriate modules:
         template_email_subject = rapport.template.get_template("subject", type="email")
         template_email_body = rapport.template.get_template("body", type="email")
         #email_subject = template_email_subject.render(
         email_body = template_email_body.render({"plugins": self.plugins, "results": results})
         
-        print "X",email_body,"X"
+        report_path = os.path.expanduser(os.path.join("~", ".rapport", "reports", self.timeframe.end.isoformat()))
+        if not os.path.exists(report_path):
+            os.makedirs(report_path)
+        report_file = os.path.join(report_path, "email.body.text")
+        with open(report_file, "w") as report:
+            report.write(email_body)
+
+        print "Your work report ({0}):\n{1}".format(report_file, email_body)
 
        ## Print results sorted by plugin appearance in config file (i.e. init order):
        #for plugin in self.plugins:
