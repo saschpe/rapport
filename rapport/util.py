@@ -24,6 +24,9 @@ import subprocess
 _FIRST_CAP_RE = re.compile('(.)([A-Z][a-z]+)')
 _ALL_CAP_RE = re.compile('([a-z0-9])([A-Z])')
 
+ISO8610_FORMAT = "%Y-%m-%dT%H:%M:%S"
+ISO8610_FORMAT_MICROSECONDS = "%Y-%m-%dT%H:%M:%S.%f"
+
 
 def camelcase_to_underscores(word):
     """Converts a CamelCase word into an under_score word.
@@ -56,9 +59,10 @@ def datetime_from_iso8601(date):
         >>> datetime_from_iso8601("2013-01-07T12:55:19.257")
         datetime.datetime(2013, 1, 7, 12, 55, 19, 257000)
     """
-    format = "%Y-%m-%dT%H:%M:%S"
+    format = ISO8610_FORMAT
     if date.endswith("Z"):
         date = date[:-1]  # Date date is UTC
     if re.match(".*\.\d+", date):
-        format += ".%f"  # Date includes microseconds
+        # Date includes microseconds
+        format = ISO8610_FORMAT_MICROSECONDS
     return datetime.datetime.strptime(date, format)
