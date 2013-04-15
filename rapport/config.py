@@ -98,12 +98,15 @@ def load():
     return CONF
 
 
-def get(section, option):
-    return CONF.get(section, option)
+def get(section, option, default=None):
+    if CONF.has_option(section, option):
+        return CONF.get(section, option)
+    else:
+        return default
 
 
-def get_int(section, option):
-    return int(get(section, option))
+def get_int(section, option, default=None):
+    return int(get(section, option, default))
 
 
 def plugins():
