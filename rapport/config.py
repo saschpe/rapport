@@ -109,6 +109,10 @@ def get_int(section, option, default=None):
     return int(get(section, option, default))
 
 
+def set(section, option, value):
+    CONF.set(section, option, str(value))
+
+
 def plugins():
     for section in CONF.sections():
         if section.startswith("plugin:"):
