@@ -3,8 +3,8 @@
 {% if commit_comment_events or issues_comment_events or  pull_request_review_comment_events %}
 - 
 {%- if commit_comment_events %} {{ commit_comment_events|length }} commits{% endif %}
-{%- if issues_comment_events %}{% if commit_comment_events %} and {% endif %}{{ issues_comment_events|length }} issues{% endif %}
-{%- if pull_request_review_comment_events %}{% if issues_comment_events or (commit_comment_events and not issues_comment_events) %} and {% endif %}{{ pull_request_review_comment_events|length }} pull request reviews{% endif %}
+{%- if issues_comment_events %}{% if commit_comment_events %} and{% endif %} {{ issues_comment_events|length }} issues{% endif %}
+{%- if pull_request_review_comment_events %}{% if issues_comment_events or (commit_comment_events and not issues_comment_events) %} and{% endif %} {{ pull_request_review_comment_events|length }} pull request reviews{% endif %}
  commented
 {% endif %}
 {% if create_events %}
