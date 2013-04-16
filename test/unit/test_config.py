@@ -26,4 +26,4 @@ class ConfigTestCase(unittest.TestCase):
         config_dirs = rapport.config._get_config_dirs()
         self.assertIn(os.path.expanduser(os.path.join("~", ".rapport")), config_dirs)
         self.assertIn(os.path.join("/etc", "rapport"), config_dirs)
-        self.assertIn(os.path.abspath("config"), config_dirs)
+        self.assertIn(os.path.abspath(os.path.join("rapport", "config")), config_dirs)
