@@ -16,6 +16,7 @@
 
 import datetime
 import os
+import shutil
 import sys
 
 import rapport.config
@@ -53,3 +54,8 @@ def create_report(date=datetime.datetime.now()):
     if not os.path.exists(report_path):
         os.makedirs(report_path)
     return report_path
+
+
+def delete_report(report):
+    report_path = _get_reports_path(report)
+    shutil.rmtree(report_path)
