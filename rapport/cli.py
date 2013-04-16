@@ -119,22 +119,23 @@ class CLI(object):
 
     def main(self):
         parser = argparse.ArgumentParser()
-        parser.add_argument("--version", action="version", version="rapport {0}".format(rapport.__version__))
+        parser.add_argument("-V", "--version", action="version", version="rapport {0}".format(rapport.__version__))
+        parser.add_argument("-v", "--verbosity", action="count", help="verbosity level (-v or -vv)")
         subparsers = parser.add_subparsers(title="commands")
 
-        parser_create = subparsers.add_parser("create", help="create work report")
+        parser_create = subparsers.add_parser("create", help="create a new work report")
         parser_create.set_defaults(func=self.create)
-        parser_list = subparsers.add_parser("list", help="list work reports")
+        parser_list = subparsers.add_parser("list", help="list already existing work reports")
         parser_list.set_defaults(func=self.list)
-        parser_show = subparsers.add_parser("show", help="display a work report")
+        parser_show = subparsers.add_parser("show", help="display a specific work report")
         parser_show.add_argument("-r", "--raw", action="store_true", help="display the raw report data")
         parser_show.add_argument("report", nargs="?", default=None)
         parser_show.set_defaults(func=self.show)
        #parser_edit = subparsers.add_parser("edit", help="edit report prior to sending")
        #parser_edit.set_defaults(func=self.edit)
 
-        parser_email = subparsers.add_parser("email", help="e-mail functionality")
-        email_subparsers = parser_email.add_subparsers(title="email commands")
+        parser_email = subparsers.add_parser("email", help="e-mail composing and sending")
+        email_subparsers = parser_email.add_subparsers(title="e-mail commands")
        #parser_email_send = email_subparsers.add_parser("send")
        #parser_email_send.set_defaults(func=self.email_send)
        #parser_email_compose = email_subparsers.add_parser("compose")
@@ -142,12 +143,18 @@ class CLI(object):
         parser_email_xdg = email_subparsers.add_parser("xdg", help="use xdg-email to compose, i.e. use your preferred mailer under KDE/GNOME/XFCE/etc.")
         parser_email_xdg.add_argument("report", nargs="?", default=None)
         parser_email_xdg.set_defaults(func=self.email_xdg)
+        parser_email_help = email_subparsers.add_parser("help", help="show e-mail help")
+        parser_email_help.set_defaults(func=lambda args: parser_email.print_help())
 
         parser_help = subparsers.add_parser("help", help="show this help")
         parser_help.set_defaults(func=lambda args: parser.print_help())
 
         args = parser.parse_args()
         args.func(args)
+
+        #TODO: This is beginning to look ugly. Maybe use oslo.config or sth.:
+        if args.verbosity > rapport.config.get_int("rapport", "verbosity"):
+            rapport.config.set("rapport", "verbosity", args.verbosity)
 
 
 def main():
