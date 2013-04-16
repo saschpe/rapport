@@ -47,9 +47,9 @@ class Plugin(object):
            >>> import rapport.plugin
            >>> c = rapport.plugin.Plugin(alias="a", url="http://example.com", login="u")
            >>> c._results()
-           {'url': 'http://example.com', 'alias': 'a', 'login': 'u'}
+           {'url': ParseResult(scheme='http', netloc='example.com', path='', params='', query='', fragment=''), 'alias': 'a', 'login': 'u', 'plugin': 'plugin'}
            >>> c._results({'mykey': 'mykey'})
-           {'url': 'http://example.com', 'alias': 'a', 'login': 'u', 'mykey': 'mykey'}
+           {'url': ParseResult(scheme='http', netloc='example.com', path='', params='', query='', fragment=''), 'alias': 'a', 'login': 'u', 'mykey': 'mykey', 'plugin': 'plugin'}
         """
         results = {"plugin": str(self),
                    "alias": self.alias,
