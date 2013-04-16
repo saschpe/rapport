@@ -32,7 +32,7 @@ def _get_reports_path(report=None):
 def list_reports():
     """Returns a list of created reports.
     """
-    return os.listdir(_get_reports_path())
+    return sorted(os.listdir(_get_reports_path()))
 
 
 def get_report(report=None):
