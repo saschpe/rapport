@@ -118,7 +118,7 @@ def discover():
     # rapport modules shadowing system modules (e.g. rapport.email) but some
     # plugins (notably bugzilla) may have issues with that.
     old_sys_path = sys.path
-    sys.path = sys.path[1:]
+    sys.path = sys.path[2:]
 
     for plugin_file in plugin_files:
         if rapport.config.get_int("rapport", "verbosity") >= 2:

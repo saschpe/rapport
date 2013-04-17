@@ -30,7 +30,7 @@ else:
 # Custom hack for being able to "import rapport" (for __version__) inside the
 # development tree:
 if __name__ == "__main__":
-    sys.path.append(os.getcwd())
+    sys.path.insert(0, os.getcwd())
 
 import rapport
 import rapport.config
