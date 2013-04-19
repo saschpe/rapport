@@ -22,10 +22,6 @@ import argparse
 import getpass
 import os
 import sys
-if sys.version_info > (3, 3):
-    import concurrent.futures as futures
-else:
-    import futures
 
 # Custom hack for being able to "import rapport" (for __version__) inside the
 # development tree:
@@ -37,7 +33,6 @@ import rapport.config
 import rapport.email
 import rapport.plugin
 import rapport.report
-import rapport.template
 import rapport.timeframe
 
 
@@ -52,41 +47,8 @@ class CLI(object):
         self.timeframe = rapport.timeframe.init_from_config()
 
     def create(self, args):
-        results = {}
-        with futures.ThreadPoolExecutor(max_workers=4) as executor:
-            plugin_futures = dict((executor.submit(p.collect, self.timeframe), p) for p in self.plugins)
-            for future in futures.as_completed(plugin_futures):
-                plugin = plugin_futures[future]
-                try:
-                    if rapport.config.get_int("rapport", "verbosity") >= 2:
-                        print "Result for {0}: {1}".format(plugin.alias, future.result())
-                    template = rapport.template.get_template(plugin, "text")
-                    if template:
-                        results[plugin] = template.render(future.result())
-                except Exception as e:
-                    print >>sys.stderr, "Failed plugin {0}:{1}: {2}!".format(plugin, plugin.alias, e)
-
-        # Create new report:
-        render_date = self.timeframe.end
-        report_path = rapport.report.create_report(render_date)
-
-        # Render mail templates:
-        template_email_body = rapport.template.get_template("body", type="email")
-        email_body = template_email_body.render({"plugins": self.plugins,
-                                                 "results": results})
-        email_body_file = os.path.join(report_path, "email.body.text")
-        with open(email_body_file, "w") as report:
-            report.write(email_body)
-
-        template_email_subject = rapport.template.get_template("subject", type="email")
-        email_subject = template_email_subject.render({"login": rapport.config.get("user", "login"),
-                                                       "date": render_date.date().isoformat()})
-        email_subject_file = os.path.join(report_path, "email.subject.text")
-        with open(email_subject_file, "w") as report:
-            report.write(email_subject)
-
-        # That's it:
-        print "Your work report ({0}):\n{1}".format(email_body_file, email_body)
+        report = rapport.report.create_report(self.plugins, self.timeframe)
+        print "Your work report for {0}:\n{1}".format(self.timeframe, report["body"])
 
     def list(self, args):
         for report in rapport.report.list_reports():
