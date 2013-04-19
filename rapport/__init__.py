@@ -15,11 +15,11 @@
 # Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 """
-:mod:`rapport` -- Work Report Generator
-=======================================
+:mod:`rapport` -- Work report generator for the lazy
+====================================================
 
 .. automodule:: rapport
-   :synopsis: Work Report Generator
+   :synopsis: Work report generator for the lazy
 .. moduleauthor:: Sascha Peilicke <saschpe@gmx.de>
 """
 

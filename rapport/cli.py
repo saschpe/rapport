@@ -35,6 +35,11 @@ rapport.config.load()
 rapport.config.init_user()
 rapport.plugin.discover()
 
+class RapportHelpFormatter(argparse.HelpFormatter):
+    def start_section(self, heading):
+        # Title-case the headings
+        heading = "{0}{1}".format(heading[0].upper(), heading[1:])
+        super(RapportHelpFormatter, self).start_section(heading)
 
 class CLI(object):
     def __init__(self):
@@ -78,36 +83,43 @@ class CLI(object):
                                   bcc=rapport.config.get("email", "bcc"))
 
     def main(self):
-        parser = argparse.ArgumentParser()
-        parser.add_argument("-V", "--version", action="version", version="rapport {0}".format(rapport.__version__))
-        parser.add_argument("-v", "--verbosity", action="count", help="verbosity level (-v or -vv)")
-        subparsers = parser.add_subparsers(title="commands")
+        parser = argparse.ArgumentParser(prog="rapport",
+                                         description="Work report generator for the lazy",
+                                         epilog='See "rapport help COMMAND" for help on a specific command.',
+                                         add_help=False,
+                                         formatter_class=RapportHelpFormatter)
+        parser.add_argument("--version", action="version", version=rapport.__version__,
+                            help="Shows program's version and exits")
+        parser.add_argument("-v", "--verbosity", action="count", help="Verbosity level (-v or -vv)")
+        subparsers = parser.add_subparsers(title="Positional arguments", metavar="<subcommand>")
 
-        parser_list = subparsers.add_parser("list", help="list already existing work reports")
+        parser_list = subparsers.add_parser("list", help="List already existing work reports")
         parser_list.set_defaults(func=self.list)
-        parser_create = subparsers.add_parser("create", help="create a new work report")
+        parser_create = subparsers.add_parser("create", help="Create a new work report")
         parser_create.set_defaults(func=self.create)
-        parser_show = subparsers.add_parser("show", help="display a specific work report")
-        parser_show.add_argument("-r", "--raw", action="store_true", help="display the raw report data")
+        parser_show = subparsers.add_parser("show", help="Display a specific work report")
+        parser_show.add_argument("-r", "--raw", action="store_true", help="Display the raw report data")
         parser_show.add_argument("report", nargs="?", default=None)
         parser_show.set_defaults(func=self.show)
-        parser_edit = subparsers.add_parser("edit", help="edit parts of a report prior to sending")
+        parser_edit = subparsers.add_parser("edit", help="Edit parts of a report prior to sending")
         parser_edit.add_argument("report", nargs="?", default=None)
         parser_edit.add_argument("-t", "--type", default="email", choices=("email", "html"))
         parser_edit.add_argument("-ep", "--email-part", default="body", choices=("body", "subject"))
         parser_edit.set_defaults(func=self.edit)
-        parser_delete = subparsers.add_parser("delete", help="delete a work report")
-        parser_delete.add_argument("report", nargs="+", help="the report to delete")
+        parser_delete = subparsers.add_parser("delete", help="Delete a work report")
+        parser_delete.add_argument("report", nargs="+", help="The report to delete")
         parser_delete.set_defaults(func=self.delete)
 
        #parser_email_compose = subparsers.add_parser("email-compose")
        #parser_email_compose.set_defaults(func=self.email_compose)
-        parser_email_xdg = subparsers.add_parser("email-compose-xdg", help="use xdg-email to compose, i.e. use your preferred mailer under KDE/GNOME/XFCE/etc.")
+        parser_email_xdg = subparsers.add_parser("email-compose-xdg", help="Use xdg-email to compose, i.e. your preferred mailer under KDE/GNOME/XFCE/etc.")
         parser_email_xdg.add_argument("report", nargs="?", default=None)
         parser_email_xdg.set_defaults(func=self.email_xdg)
 
-        parser_help = subparsers.add_parser("help", help="show this help")
+        parser_help = subparsers.add_parser("help", help="Show this help")
         parser_help.set_defaults(func=lambda args: parser.print_help())
+       #subparser.add_argument('-h', '--help', action='help',
+       #                       help=argparse.SUPPRESS)
 
         args = parser.parse_args()
         args.func(args)
