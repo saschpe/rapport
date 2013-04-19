@@ -65,9 +65,6 @@ class CLI(object):
         rapport.report.edit_report(args.report, args.type)
 
 
-   #def email_send(self, args):
-   #    pass
-
    #def email_compose(self, args):
    #    pass
 
@@ -103,17 +100,11 @@ class CLI(object):
         parser_delete.add_argument("report", nargs="+", help="the report to delete")
         parser_delete.set_defaults(func=self.delete)
 
-        parser_email = subparsers.add_parser("email", help="e-mail composing and sending")
-        email_subparsers = parser_email.add_subparsers(title="e-mail commands")
-       #parser_email_send = email_subparsers.add_parser("send")
-       #parser_email_send.set_defaults(func=self.email_send)
-       #parser_email_compose = email_subparsers.add_parser("compose")
+       #parser_email_compose = subparsers.add_parser("email-compose")
        #parser_email_compose.set_defaults(func=self.email_compose)
-        parser_email_xdg = email_subparsers.add_parser("xdg", help="use xdg-email to compose, i.e. use your preferred mailer under KDE/GNOME/XFCE/etc.")
+        parser_email_xdg = subparsers.add_parser("email-compose-xdg", help="use xdg-email to compose, i.e. use your preferred mailer under KDE/GNOME/XFCE/etc.")
         parser_email_xdg.add_argument("report", nargs="?", default=None)
         parser_email_xdg.set_defaults(func=self.email_xdg)
-        parser_email_help = email_subparsers.add_parser("help", help="show e-mail help")
-        parser_email_help.set_defaults(func=lambda args: parser_email.print_help())
 
         parser_help = subparsers.add_parser("help", help="show this help")
         parser_help.set_defaults(func=lambda args: parser.print_help())
