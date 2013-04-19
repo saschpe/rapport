@@ -35,11 +35,13 @@ rapport.config.load()
 rapport.config.init_user()
 rapport.plugin.discover()
 
+
 class RapportHelpFormatter(argparse.HelpFormatter):
     def start_section(self, heading):
         # Title-case the headings
         heading = "{0}{1}".format(heading[0].upper(), heading[1:])
         super(RapportHelpFormatter, self).start_section(heading)
+
 
 class CLI(object):
     def __init__(self):
@@ -65,14 +67,11 @@ class CLI(object):
         for report in args.report:
             rapport.report.delete_report(report)
 
-
     def edit(self, args):
         rapport.report.edit_report(args.report, args.type)
 
-
    #def email_compose(self, args):
    #    pass
-
 
     def email_xdg(self, args):
         report = rapport.report.get_report(args.report)

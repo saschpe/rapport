@@ -27,11 +27,13 @@ def _get_template_dirs(type="plugin"):
     template_dirs = [
         os.path.expanduser(os.path.join("~", ".rapport", "templates", type)),
         os.path.join("rapport", "templates", type)  # Local dev tree
-    ]  + map(lambda d: os.path.join(d, "rapport", "templates", type), site.getsitepackages())
+    ] + map(lambda d: os.path.join(d, "rapport", "templates", type), site.getsitepackages())
     return template_dirs
 
 
 _JINJA2_ENV = {}
+
+
 def init():
     for type in ["plugin", "email", "web"]:
         loader = jinja2.FileSystemLoader(_get_template_dirs(type))
@@ -50,4 +52,3 @@ def get_template(name, format="text", type="plugin"):
         return _JINJA2_ENV[type].get_template(template_name)
     except jinja2.TemplateNotFound as e:
         print >>sys.stderr, "Missing template {0}/{1}!".format(type, template_name)
-

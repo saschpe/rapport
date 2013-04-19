@@ -27,7 +27,7 @@ import rapport.util
 
 # This is the public rapport Trello api key, which is used by default if you don't
 # supply your own. In general you wouldn't need to either.
-_RAPPORT_API_KEY="e8b72b9823082ad89dd7dfb40e8373bd"
+_RAPPORT_API_KEY = "e8b72b9823082ad89dd7dfb40e8373bd"
 
 
 class TrelloPlugin(rapport.plugin.Plugin):

@@ -38,8 +38,8 @@ class MediawikiPlugin(rapport.plugin.Plugin):
         #TODO: Check back ugly "UTC" timestamp hack here:
         edits = self._get({"list": "usercontribs",
                                    "ucuser": "{0}".format(self.login),
-                                   "ucstart": timeframe.end.isoformat()+"Z",
-                                   "ucend": timeframe.start.isoformat()+"Z"})
+                                   "ucstart": timeframe.end.isoformat() + "Z",
+                                   "ucend": timeframe.start.isoformat() + "Z"})
         return self._results({"edits": edits["usercontribs"]})
 
 
