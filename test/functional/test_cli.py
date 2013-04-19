@@ -25,7 +25,7 @@ from rapport.util import silent_popen
 
 class CLIFunctionalTestCase(unittest.TestCase):
     def setUp(self):
-        self.result = "rapport {0}\n".format(__version__)
+        self.result = "{0}\n".format(__version__)
 
     def test_call_rapport_cli(self):
         args = [sys.executable, "-m", "rapport.cli", "--version"]
