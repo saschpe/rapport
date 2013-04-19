@@ -18,6 +18,7 @@ import datetime
 import glob
 import os
 import shutil
+import subprocess
 import sys
 if sys.version_info > (3, 3):
     import concurrent.futures as futures
@@ -53,6 +54,18 @@ def get_report(report=None):
         with open(os.path.join(report_path, filename), "r") as f:
             report_dict[filename] = f.read()
     return report_dict
+
+
+def edit_report(report=None, type="email", email_part="body"):
+    if not report:
+        report = list_reports()[-1:][0]
+    report_path = _get_reports_path(report)
+    editor = os.getenv("EDITOR", "vi")
+    if type == "email":
+        report_file = "{0}.{1}.text".format(type, email_part)
+    elif type == "html":
+        report_file = "index.html"
+    subprocess.call([editor, os.path.join(report_path, report_file)])
 
 
 def create_report(plugins, timeframe):

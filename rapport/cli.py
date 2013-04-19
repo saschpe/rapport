@@ -61,14 +61,16 @@ class CLI(object):
             rapport.report.delete_report(report)
 
 
-   #def edit(self, args):
-   #    pass
+    def edit(self, args):
+        rapport.report.edit_report(args.report, args.type)
+
 
    #def email_send(self, args):
    #    pass
 
    #def email_compose(self, args):
    #    pass
+
 
     def email_xdg(self, args):
         report = rapport.report.get_report(args.report)
@@ -95,8 +97,11 @@ class CLI(object):
         parser_delete = subparsers.add_parser("delete", help="delete a work report")
         parser_delete.add_argument("report", nargs="+", help="the report to delete")
         parser_delete.set_defaults(func=self.delete)
-       #parser_edit = subparsers.add_parser("edit", help="edit report prior to sending")
-       #parser_edit.set_defaults(func=self.edit)
+        parser_edit = subparsers.add_parser("edit", help="edit parts of a report prior to sending")
+        parser_edit.add_argument("report", nargs="?", default=None)
+        parser_edit.add_argument("-t", "--type", default="email", choices=("email", "html"))
+        parser_edit.add_argument("-ep", "--email-part", default="body", choices=("body", "subject"))
+        parser_edit.set_defaults(func=self.edit)
 
         parser_email = subparsers.add_parser("email", help="e-mail composing and sending")
         email_subparsers = parser_email.add_subparsers(title="e-mail commands")
