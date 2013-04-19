@@ -15,6 +15,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
 import datetime
+import glob
 import os
 import shutil
 import sys
@@ -102,5 +103,7 @@ def create_report(plugins, timeframe):
 
 
 def delete_report(report):
-    report_path = _get_reports_path(report)
-    shutil.rmtree(report_path)
+    """Delete report(s), supports globbing.
+    """
+    for path in glob.glob(os.path.join(_get_reports_path(), report)):
+        shutil.rmtree(path)
