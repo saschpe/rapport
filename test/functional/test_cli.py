@@ -28,7 +28,7 @@ class CLIFunctionalTestCase(unittest.TestCase):
         self.result = "rapport {0}\n".format(__version__)
 
     def test_call_rapport_cli(self):
-        args = [sys.executable, "rapport/cli.py", "--version"]
+        args = [sys.executable, "-m", "rapport.cli", "--version"]
         self.assertEqual(silent_popen(args), self.result)
 
     def test_call_script_wrapper(self):
