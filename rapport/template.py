@@ -19,12 +19,13 @@ import sys
 
 import jinja2
 
+from rapport.config import USER_CONFIG_DIR
 
 def _get_template_dirs(type="plugin"):
     """Return a list of directories where templates may be located.
     """
     template_dirs = [
-        os.path.expanduser(os.path.join("~", ".rapport", "templates", type)),
+        os.path.expanduser(os.path.join(USER_CONFIG_DIR, "templates", type)),
         os.path.join("rapport", "templates", type)  # Local dev tree
     ]
     return template_dirs

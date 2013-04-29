@@ -23,17 +23,21 @@ except ImportError:
 
 import rapport.config
 
+XDG_CONFIG_HOME_DIR = os.getenv('XDG_CONFIG_HOME') or \
+                      os.path.expanduser(os.path.join("~", ".config"))
+USER_CONFIG_DIR     = os.path.join(XDG_CONFIG_HOME_DIR, "rapport")
+USER_CONFIG_FILE    = os.path.join(USER_CONFIG_DIR, "rapport.conf")
 
 def _get_config_dirs():
     """Return a list of directories where config files may be located.
 
     The following directories are returned::
 
-      ~/.rapport/
+      $XDG_CONFIG_HOME/rapport/ ($XDG_CONFIG_HOME defaults to ~/.config)
       /etc/rapport/
     """
     config_dirs = [
-        os.path.expanduser(os.path.join("~", ".rapport")),
+        USER_CONFIG_DIR,
         os.path.join("/", "etc", "rapport"),
         os.path.abspath(os.path.join("rapport", "config"))
     ]
@@ -55,19 +59,16 @@ def find_config_files():
 
 
 def init_user():
-    """Create and populate the ~/.rapport directory tree if it's not existing.
+    """Create and populate the ~/.config/rapport directory tree if it's not existing.
 
     Doesn't interfere with already existing directories or configuration files.
     """
-    user_conf_dir = os.path.expanduser(os.path.join("~", ".rapport"))
-    user_conf_file = os.path.join(user_conf_dir, "rapport.conf")
-
-    if not os.path.exists(user_conf_dir):
+    if not os.path.exists(USER_CONFIG_DIR):
         if rapport.config.get_int("rapport", "verbosity") >= 1:
-            print("Create user directory {0}".format(user_conf_dir))
-        os.makedirs(user_conf_dir)
+            print("Create user directory {0}".format(USER_CONFIG_DIR))
+        os.makedirs(USER_CONFIG_DIR)
     for subdir in ["plugins", "reports", "templates/plugin", "templates/email", "templates/web"]:
-        user_conf_subdir = os.path.join(user_conf_dir, subdir)
+        user_conf_subdir = os.path.join(USER_CONFIG_DIR, subdir)
         if not os.path.exists(user_conf_subdir):
             if rapport.config.get_int("rapport", "verbosity") >= 1:
                 print("Create user directory {0}".format(user_conf_subdir))
@@ -76,16 +77,16 @@ def init_user():
             if rapport.config.get_int("rapport", "verbosity") >= 1:
                 print("Set secure directory permissions for {0}".format(user_conf_subdir))
             os.chmod(user_conf_subdir, 0o700)
-    if not os.path.exists(user_conf_file):
+    if not os.path.exists(USER_CONFIG_FILE):
         if rapport.config.get_int("rapport", "verbosity") >= 1:
-            print("Create user configuration {0}".format(user_conf_file))
+            print("Create user configuration {0}".format(USER_CONFIG_FILE))
         default_config = os.path.abspath(os.path.join(os.path.splitext(__file__)[0], "rapport.conf"))
-        shutil.copyfile(default_config, user_conf_file)
+        shutil.copyfile(default_config, USER_CONFIG_FILE)
 
-    if not (os.stat(user_conf_file).st_mode & 0o777) == 0o600:
+    if not (os.stat(USER_CONFIG_FILE).st_mode & 0o777) == 0o600:
         if rapport.config.get_int("rapport", "verbosity") >= 1:
-            print("Set secure file permissions for {0}".format(user_conf_file))
-        os.chmod(user_conf_file, 0o600)
+            print("Set secure file permissions for {0}".format(USER_CONFIG_FILE))
+        os.chmod(USER_CONFIG_FILE, 0o600)
 
 
 CONF = None

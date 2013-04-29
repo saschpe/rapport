@@ -21,6 +21,7 @@ try:
 except ImportError:
     import urlparse
 
+from rapport.config import USER_CONFIG_DIR
 import rapport.config
 import rapport.util
 
@@ -79,7 +80,7 @@ def _get_plugin_dirs():
     """Return a list of directories where plugins may be located.
     """
     plugin_dirs = [
-        os.path.expanduser(os.path.join("~", ".rapport", "plugins")),
+        os.path.expanduser(os.path.join(USER_CONFIG_DIR, "plugins")),
         os.path.join("rapport", "plugins")  # Local dev tree
     ]
     return plugin_dirs
