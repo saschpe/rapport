@@ -8,7 +8,7 @@ Writing work reports is tedious. Some people have custom hacks. This is meant to
 Features
 --------
 
-- Asyncronously collects data from various resources:
+- Asynchronously collects data from various resources:
   - Bugzilla
   - Gerrit
   - Github
