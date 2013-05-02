@@ -43,7 +43,11 @@ class GithubPlugin(rapport.plugin.Plugin):
 
     def collect(self, timeframe):
         url = "https://api.github.com/users/{0}/events".format(self.login)
-        d = collections.defaultdict(list)
+        d = {
+            "events_by_time" : [],
+            "events_by_type" : collections.defaultdict(list),
+            "events_by_repo" : {},
+        }
 
         # Paginate through the activity stream, mark first item in timeline
         # and last one to have a criteria for stopping pagination.
@@ -53,33 +57,17 @@ class GithubPlugin(rapport.plugin.Plugin):
             for event in events_json:
                 created_at = rapport.util.datetime_from_iso8601(event["created_at"])
                 if timeframe.contains(created_at):
-                    d["events"].append(event)
-                    if event["type"] == "CommitCommentEvent":
-                        d["commit_comment_events"].append(event)
-                    elif event["type"] == "CreateEvent":
-                        d["create_events"].append(event)
-                    elif event["type"] == "DeleteEvent":
-                        d["delete_events"].append(event)
-                    elif event["type"] == "ForkEvent":
-                        d["fork_events"].append(event)
-                    elif event["type"] == "GistEvent":
-                        d["gist_events"].append(event)
-                    elif event["type"] == "GollumEvent":
-                        d["gollum_events"].append(event)
-                    elif event["type"] == "IssuesEvent":
-                        d["issues_events"].append(event)
-                    elif event["type"] == "IssueCommentEvent":
-                        d["issues_comment_events"].append(event)
-                    elif event["type"] == "PullRequestEvent":
-                        d["pull_request_events"].append(event)
-                    elif event["type"] == "PullRequestReviewCommentEvent":
-                        d["pull_request_review_comment_events"].append(event)
-                    elif event["type"] == "PushEvent":
-                        d["push_events"].append(event)
-                    elif event["type"] == "TeamAddEvent":
-                        d["team_add_events"].append(event)
+                    d["events_by_time"].append(event)
+                    d["events_by_type"][event["type"]].append(event)
+
+                    repo = event["repo"]["name"]
+                    if repo not in d["events_by_repo"]:
+                        d["events_by_repo"][repo] = collections.defaultdict(list)
+                    d["events_by_repo"][repo]["events"].append(event)
+                    d["events_by_repo"][repo][event["type"]].append(event)
+                    #import code; code.interact(local=locals())
                 else:
-                    if d["events"]:  # Found the last event inside the timeframe
+                    if d["events_by_time"]:  # Found the last event inside the timeframe
                         url = None  # Don't fetch another page, got everything interesting
                         break  # No need to process the remaining events on this page
 

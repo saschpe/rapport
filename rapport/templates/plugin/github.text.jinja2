@@ -1,89 +1,63 @@
-{% if events %}
+{#
+   See http://developer.github.com/v3/activity/events/types/
+#}
+%%  if events_by_repo
 [github]
-{% if commit_comment_events or issues_comment_events or  pull_request_review_comment_events %}
-- 
-{%- if commit_comment_events %} {{ commit_comment_events|length }} commits{% endif %}
-{%- if issues_comment_events %}{% if commit_comment_events %} and{% endif %} {{ issues_comment_events|length }} issues{% endif %}
-{%- if pull_request_review_comment_events %}{% if issues_comment_events or (commit_comment_events and not issues_comment_events) %} and{% endif %} {{ pull_request_review_comment_events|length }} pull request reviews{% endif %}
- commented
-{% endif %}
-{% if create_events %}
-{% trans count=create_events|length %}
-- {{ count }} create event:
-{% pluralize %}
-- {{ count }} create events:
-{% endtrans %}
-{% for repo, events in create_events|groupby("repo.name") %}
-{% for type, list in events|groupby("payload.ref_type") %}
-{% trans count=list|length %}
-  + {{ count }} {{ type }} in {{ repo }}
-{% pluralize %}
-  + {{ count }} {{ type }}s in {{ repo }}
-{% endtrans %}
-{% endfor %}
-{% endfor %}
-{% endif %}
-{# Do we need info about deleted branches or tags?
-{% if delete_events %}
-- {{ delete_events|length }} deleted repositories
-{% endif %}
+%%      for repo, event_types in events_by_repo.iteritems() if repo != "/"
+##
+  - {{ repo }}
+{# TODO: TeamAddEventEvent #}
+%%          for event in event_types["ForkEvent"]
+    + forked repo to {{ event.payload.forkee.full_name }}
+%%          endfor
+{##}
+%%          for event in event_types["CreateEvent"]
+    + created {{ event.payload.ref_type }} '{{ event.payload.ref }}'
+%%          endfor
+{##}
+%%          for event in event_types["PushEvent"]
+%%                  set commit_count = event.payload.commits|length
+%%                  if commit_count == 1
+%%                      set commit = event.payload.commits[0]
+    + pushed to {{ event.payload.ref|replace("refs/heads/", "") }}: {{ commit["sha"]|truncate(8, true, end="") }} {{ commit["message"]|firstline }}
+%%                  else
+    + pushed {{ commit_count }} commits to {{ event.payload.ref|replace("refs/heads/", "") }}
+%%                      for commit in event.payload.commits
+      - {{ commit.sha|truncate(8, true, end="") }} {{ commit["message"]|firstline }}
+%%                      endfor
+%%                  endif
+%%          endfor
+{##}
+%%          for event in event_types["PullRequestEvent"]
+    + {{ event.payload.action }} pull request #{{ event.payload.number }} ({{ event.payload.pull_request.title }})
+%%          endfor
+{##}
+%%          for event in event_types["IssueCommentEvent"]
+    + {{ event.payload.action }} comment on issue #{{ event.payload.issue.number }} ({{ event.payload.issue.title }})
+%%          endfor
+{#
+  "CommitCommentEvent",
+  "PullRequestReviewCommentEvent",
+  "GollumEvent",
+  "GistEvent",
 #}
-{% if gist_events %}
-{% trans count=gist_events|length %}
-- {{ count }} gist
-{% pluralize %}
-- {{ count }} gists
-{% endtrans %}
-{% endif %}
-{% if gollum_events %}
-{% trans count=gollum_events|length %}
-- {{ count }} page edit:
-{% pluralize %}
-- {{ count }} page edits:
-{% endtrans %}
-{% for repo, pages in gollum_events|groupby("repo.name") %}
-  + {{ pages|length }} in {{ repo }}
-{% endfor %}
-{% endif %}
-{% if issues_events %}
-- 
-{%- for action, issues in issues_events|groupby("payload.action") %}
-{% if loop.first %} {% else %} and {% endif %}{{ issues|length }} {{ action }}
-{%- endfor %} issues
-{% endif %}
-{% if fork_events %}
-{% trans count=fork_events|length %}
-- {{ count }} forked repository:
-{% pluralize %}
-- {{ count }} forked repositories:
-{% endtrans %}
-{% for fork_event in fork_events %}
-  + {{ fork_event.payload.forkee.full_name }} from {{ fork_event.repo.name }}
-{% endfor %}
-{% endif %}
-{% if pull_request_events %}
-- 
-{%- for action, pulls in pull_request_events|groupby("payload.action") %}
-{% if loop.first %} {% else %} and {% endif %}{{ pulls|length }} {{ action }}
-{% endfor %} pull requests
-{% endif %}
-{% if push_events %}
-{% trans count=push_events|length %}
-- {{ count }} push event summing up to:
-{% pluralize %}
-- {{ count }} push events summing up to:
-{% endtrans %}
-{% for repo, pushs in push_events|groupby("repo.name") %}
-{% trans count=pushs|sum(attribute="payload.size")%}
-  + {{ count }} commit to {{ repo }}
-{% pluralize %}
-  + {{ count }} commits to {{ repo }}
-{% endtrans %}
-{% endfor %}
-{% endif %}
-{# Do these matter?
-{% if team_add_events %}
-- team add events
-{% endif %}
+%%          for event in event_types["IssuesEvent"]
+    + {{ event.payload.action }} issue #{{ event.payload.issue.number }} ({{ event.payload.issue.title }})
+%%          endfor
+{##}
+%%          for event in event_types["GollumEvent"]
+    + edited wiki: {{ event.payload.pages|join(", ", attribute="page_name") }}
+%%          endfor
+{##}
+%%          for event in event_types["DeleteEvent"]
+    + deleted {{ event.payload.ref_type }} '{{ event.payload.ref }}'
+%%          endfor
+{##}
+{#
+%%  + unsupported event type {{ event.type }}
+%%  {{ event|json }}
 #}
-{% endif %}
+{##}
+%%      endfor
+
+%%  endif
