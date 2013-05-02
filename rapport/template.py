@@ -37,6 +37,8 @@ def init():
         loader = jinja2.FileSystemLoader(_get_template_dirs(type))
         env = jinja2.Environment(loader=loader,
                                  extensions=["jinja2.ext.i18n"],
+                                 line_statement_prefix="%%",
+                                 line_comment_prefix="##",
                                  trim_blocks=True)
         env.install_null_translations(newstyle=False)
         _JINJA2_ENV[type] = env
