@@ -102,7 +102,10 @@ class NLastDaysTimeframe(Timeframe):
     def __init__(self, days=7):
         self._end = datetime.datetime.utcnow()
         self._start = self._end - datetime.timedelta(days=days)
+        self._days = days
 
+    def __str__(self):
+        return "last %d days" % self._days
 
 _TIMEFRAME_CATALOG = {"current_month": CurrentMonthTimeframe,
                       "current_week": CurrentWeekTimeframe,
