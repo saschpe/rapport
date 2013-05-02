@@ -15,9 +15,11 @@
 from __future__ import print_function
 
 import os
+import re
 import sys
 
 import jinja2
+import json
 
 from rapport.config import USER_CONFIG_DIR
 
@@ -33,6 +35,20 @@ def _get_template_dirs(type="plugin"):
 
 _JINJA2_ENV = {}
 
+def sub_filter(s, find, replace):
+    """A non-optimal implementation of a regex filter"""
+    return re.sub(find, replace, s)
+
+def subn_filter(s, find, replace, count=0):
+    """A non-optimal implementation of a regex filter"""
+    return re.gsub(find, replace, count, s)
+
+def firstline_filter(s):
+    return re.sub("\n.*", '', s)
+
+# useful for debugging when authoring templates
+def json_filter(val):
+    return json.dumps(val, sort_keys=True, indent=4)
 
 def init():
     for type in ["plugin", "email", "web"]:
@@ -43,6 +59,10 @@ def init():
                                  line_comment_prefix="##",
                                  trim_blocks=True)
         env.install_null_translations(newstyle=False)
+        env.filters['firstline'] = firstline_filter
+        env.filters['json']      = json_filter
+        env.filters['sub']       = sub_filter
+        env.filters['subn']      = subn_filter
         _JINJA2_ENV[type] = env
 
 
