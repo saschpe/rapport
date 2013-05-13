@@ -3,6 +3,7 @@ dist
 *.vim
 *.pyc
 .*.sw?
+*.egg/
 *.egg-info
 .coverage
 .tox
