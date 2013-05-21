@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import datetime
+import sys
 
 import rapport.config
 import rapport.util
