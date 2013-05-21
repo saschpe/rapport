@@ -37,7 +37,7 @@ class TestTimeframe(TimeframeTestCase):
         self.assertTrue(self.timeframe.contains(self.five_hours_ago))
 
     def test_timeframe_str(self):
-        self.assertEqual("timeframe", str(self.timeframe))
+        self.assertTrue(str(self.timeframe).startswith("Generic"))
 
 
 class TestCurrentWeekTimeframe(TimeframeTestCase):
@@ -53,7 +53,7 @@ class TestCurrentWeekTimeframe(TimeframeTestCase):
         self.assertTrue(self.timeframe.contains(self.five_hours_ago))
 
     def test_current_week_timeframe_str(self):
-        self.assertEqual("current_week", str(self.timeframe))
+        self.assertTrue(str(self.timeframe).startswith("Current week"))
 
 
 class TestCurrentMonthTimeframe(TimeframeTestCase):
@@ -69,7 +69,7 @@ class TestCurrentMonthTimeframe(TimeframeTestCase):
         self.assertTrue(self.timeframe.contains(self.five_hours_ago))
 
     def test_current_week_timeframe_str(self):
-        self.assertEqual("current_month", str(self.timeframe))
+        self.assertTrue(str(self.timeframe).startswith("Current month"))
 
 
 class TestRecentDaysTimeframe(TimeframeTestCase):
@@ -86,4 +86,4 @@ class TestRecentDaysTimeframe(TimeframeTestCase):
                          self.timeframe.end.second)
 
     def test_last_seven_days_timeframe_str(self):
-        self.assertEqual("recent_days", str(self.timeframe))
+        self.assertTrue(str(self.timeframe).startswith("Recent days"))

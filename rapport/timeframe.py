@@ -15,7 +15,6 @@
 import datetime
 
 import rapport.config
-import rapport.util
 
 
 class Timeframe(object):
@@ -25,6 +24,7 @@ class Timeframe(object):
     :end: End of timeframe (datetime object)
     """
     def __init__(self, start, end):
+        self._name = "Generic"
         self._start = start
         self._end = end
 
@@ -44,22 +44,16 @@ class Timeframe(object):
         return self._start <= date and date < self._end
 
     def __str__(self):
-        """Returns the class name in underscores.
-
-        Additionally, for sub-classes, the suffix '_timeframe' is split off.
-
-            >>> from rapport import timeframe
-            >>> t = timeframe.Timeframe(start=None, end=None)
-            >>> str(t)
-            'timeframe'
+        """Returns a string representation of a timeframe.
         """
-        return rapport.util.camelcase_to_underscores(self.__class__.__name__).rsplit("_timeframe")[0]
+        return "{0} [{1} - {2}]".format(self._name, self._start.isoformat(), self._end.isoformat())
 
 
 class CurrentWeekTimeframe(Timeframe):
     """Current week timeframe (in UTC).
     """
     def __init__(self):
+        self._name = "Current week"
         self._end = datetime.datetime.utcnow()
         # Compute the day but reset the hours/minutes/seconds to zero,
         # we want the exact week's start:
@@ -75,6 +69,7 @@ class WeekTimeframe(Timeframe):
     :week: Week number (starting from 1)
     """
     def __init__(self, week=1):
+        self._name = "Week"
         raise NotImplementedError()
 
 
@@ -82,6 +77,7 @@ class CurrentMonthTimeframe(Timeframe):
     """Current month timeframe (in UTC).
     """
     def __init__(self):
+        self._name = "Current month"
         self._end = datetime.datetime.utcnow()
         self._start = datetime.datetime(year=self._end.year,
                                         month=self._end.month, day=1)
@@ -93,6 +89,7 @@ class MonthTimeframe(Timeframe):
     :month: Month number (starting from 1)
     """
     def __init__(self, month=1):
+        self._name = "Month"
         raise NotImplementedError()
 
 
@@ -100,6 +97,7 @@ class RecentDaysTimeframe(Timeframe):
     """Recent days timeframe (in UTC).
     """
     def __init__(self, days=14):
+        self._name = "Recent days ({0})".format(days)
         self._end = datetime.datetime.utcnow()
         self._start = self._end - datetime.timedelta(days=days)
 
