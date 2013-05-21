@@ -99,7 +99,7 @@ class MonthTimeframe(Timeframe):
 class RecentDaysTimeframe(Timeframe):
     """Recent days timeframe (in UTC).
     """
-    def __init__(self, days=7):
+    def __init__(self, days=14):
         self._end = datetime.datetime.utcnow()
         self._start = self._end - datetime.timedelta(days=days)
 
