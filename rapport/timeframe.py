@@ -96,8 +96,8 @@ class MonthTimeframe(Timeframe):
         raise NotImplementedError()
 
 
-class NLastDaysTimeframe(Timeframe):
-    """'N' last days timeframe (in UTC).
+class RecentDaysTimeframe(Timeframe):
+    """Recent days timeframe (in UTC).
     """
     def __init__(self, days=7):
         self._end = datetime.datetime.utcnow()
@@ -108,7 +108,7 @@ _TIMEFRAME_CATALOG = {"current_month": CurrentMonthTimeframe,
                       "current_week": CurrentWeekTimeframe,
                       "month": MonthTimeframe,
                       "week": WeekTimeframe,
-                      "n_last_days": NLastDaysTimeframe}
+                      "recent_days": RecentDaysTimeframe}
 
 
 def init(name, *args, **kwargs):
