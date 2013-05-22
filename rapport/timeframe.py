@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import datetime
+import sys
 
 import rapport.config
 
@@ -121,6 +122,7 @@ def init(name, *args, **kwargs):
             print >>sys.stderr, "Failed to initialize timeframe {0}: {1}!".format(name, e)
     else:
         print >>sys.stderr, "Failed to initialize timeframe {0}: Not in catalog!".format(name)
+        sys.exit(1)
 
 
 def init_from_config():
