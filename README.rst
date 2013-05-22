@@ -150,7 +150,7 @@ environment`_ instead:
 
 .. code-block:: bash
 
-    $ virtualenv .venv       
+    $ virtualenv --distribute --system-site-packages .venv
     $ source .venv/bin/activate
     (.venv)$ pip install -r tools/test-requires.txt 
     (.venv)$ nosetests
