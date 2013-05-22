@@ -36,7 +36,9 @@ def init():
     for type in ["plugin", "email", "web"]:
         loader = jinja2.FileSystemLoader(_get_template_dirs(type))
         env = jinja2.Environment(loader=loader,
-                                 extensions=["jinja2.ext.i18n"],
+                                 extensions=["jinja2.ext.i18n", "jinja2.ext.loopcontrols"],
+                                 line_statement_prefix="%%",
+                                 line_comment_prefix="##",
                                  trim_blocks=True)
         env.install_null_translations(newstyle=False)
         _JINJA2_ENV[type] = env
