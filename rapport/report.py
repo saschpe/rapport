@@ -22,6 +22,9 @@ if sys.version_info > (3, 3):
     import concurrent.futures as futures
 else:
     import futures
+import traceback
+
+import jinja2
 
 import rapport.config
 import rapport.template
@@ -84,8 +87,11 @@ def create_report(plugins, timeframe):
                 tmpl = rapport.template.get_template(plugin, "text")
                 if tmpl:
                     results[plugin] = tmpl.render(future.result())
+            except jinja2.TemplateSyntaxError as e:
+                print >>sys.stderr, "Syntax error in plugin {0} at {1} line {2}: {3}".format(plugin, e.name, e.lineno, e.message)                
             except Exception as e:
-                print >>sys.stderr, "Failed plugin {0}:{1}: {2}!".format(plugin, plugin.alias, e)
+                print >>sys.stderr, "Failed plugin {0}:{1}:".format(plugin, plugin.alias)
+                print >>sys.stderr, traceback.format_exc()
 
     results_dict = {"login": rapport.config.get("user", "login"),
                     "date": report_date_string,
