@@ -19,6 +19,7 @@ Features
 --------
 
 - Asynchronously collects data from various resources:
+
   - Bugzilla
   - Gerrit
   - Github
@@ -27,10 +28,12 @@ Features
   - OpenBuildService
   - Trello
   - Twitter
+
 - Supports plugins for extendability
 - Simple ini-style config file
 - (Almost) comprehensive unit and functional testsuite
 - Supports creating work reports for arbitrary timeframes and provides some convenient ones:
+
   - Current week / month
   - Recent days
   - Week / month of of year
