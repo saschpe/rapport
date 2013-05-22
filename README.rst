@@ -22,8 +22,9 @@ Features
 - (Almost) comprehensive unit and functional testsuite
 - Supports creating work reports for arbitrary timeframes and provides some convenient ones:
   - Current week / month
-  - N last days (configurable)
-  - N-th Week / month of year (configurable)
+  - Recent days
+  - Week / month of of year
+  - Generic
 
 Written in Python, not VimScript, not Bash, not Ruby, not C, ..., you got it ;-)
 
@@ -39,7 +40,7 @@ Links
 License
 -------
 
-Currently licensed under GPL-2.0+
+Licensed under Apache-2.0
 
 
 Author
