@@ -29,15 +29,16 @@ class BugzillaPlugin(rapport.plugin.Plugin):
         self.email = email
 
         url = "{0}/xmlrpc.cgi".format(self.url.geturl())
-        self._bz = bugzilla.Bugzilla(url=url)
-        self._bz.login(user=self.login, password=self.password)
 
     def collect(self, timeframe):
-        open_bugs = self._bz.query({"assigned_to": self.email,
-                                    "bug_status": ["NEW", "ASSIGNED"]})
-        closed_bugs = self._bz.query({"assigned_to": self.email,
-                                      "bug_status": ["CLOSED", "RESOLVED"],
-                                      "last_change_time": timeframe.start})
+        bz = bugzilla.Bugzilla(url=url)
+        bz.login(user=self.login, password=self.password)
+
+        open_bugs = bz.query({"assigned_to": self.email,
+                              "bug_status": ["NEW", "ASSIGNED"]})
+        closed_bugs = bz.query({"assigned_to": self.email,
+                                "bug_status": ["CLOSED", "RESOLVED"],
+                                "last_change_time": timeframe.start})
 
         return self._results({"email": self.email, "open_bugs": open_bugs,
                               "closed_bugs": closed_bugs})
