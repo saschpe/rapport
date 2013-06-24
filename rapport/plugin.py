@@ -15,7 +15,6 @@
 from __future__ import print_function
 
 import os
-import site
 import sys
 import traceback
 try:
@@ -83,7 +82,7 @@ def _get_plugin_dirs():
     plugin_dirs = [
         os.path.expanduser(os.path.join("~", ".rapport", "plugins")),
         os.path.join("rapport", "plugins")  # Local dev tree
-    ] + [os.path.join(d, "rapport", "plugins") for d in site.getsitepackages()]
+    ] + [os.path.join(d, "rapport", "plugins") for d in rapport.util.getsitepackages()]
 
     return plugin_dirs
 
