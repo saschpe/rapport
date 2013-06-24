@@ -17,7 +17,10 @@
 
 import datetime
 import re
+import site
+import sys
 import subprocess
+
 
 _FIRST_CAP_RE = re.compile('(.)([A-Z][a-z]+)')
 _ALL_CAP_RE = re.compile('([a-z0-9])([A-Z])')
@@ -64,3 +67,19 @@ def datetime_from_iso8601(date):
         # Date includes microseconds
         format = ISO8610_FORMAT_MICROSECONDS
     return datetime.datetime.strptime(date, format)
+
+
+def under_virtualenv():
+    return hasattr(sys, "real_prefix")
+
+
+def getsitepackages():
+    if hasattr(site, "getsitepackages"):
+        return site.getsitepackages()
+    else:
+        # Workaround for older Python versions and some broken virtualenvs:
+        if under_virtualenv():
+            return []
+        else:
+            from distutils.sysconfig import get_python_lib
+            return [get_python_lib(True)]
