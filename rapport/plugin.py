@@ -82,8 +82,7 @@ def _get_plugin_dirs():
     plugin_dirs = [
         os.path.expanduser(os.path.join("~", ".rapport", "plugins")),
         os.path.join("rapport", "plugins")  # Local dev tree
-    ] + [os.path.join(d, "rapport", "plugins") for d in rapport.util.getsitepackages()]
-
+    ]
     return plugin_dirs
 
 
