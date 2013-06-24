@@ -155,8 +155,8 @@ environment`_ instead:
     (.venv)$ pip install -r tools/test-requires.txt 
     (.venv)$ nosetests
 
-Lastly, if using virtualenv is to tedious or you want to test different
-configurations (py26, py27), you can also use `tox`_:
+Lastly, if using virtualenv is too tedious or you want to test different
+configurations (py26, py27, py33), you can also use `tox`_:
 
 .. code-block:: bash
 
