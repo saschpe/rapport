@@ -21,7 +21,7 @@ from distutils.core import Command
 
 
 class PEP8Command(Command):
-    description = "Run PEP8 with custom options"
+    description = "Run pep8 with custom options"
     user_options = []
 
     def initialize_options(self):
@@ -33,7 +33,7 @@ class PEP8Command(Command):
     def run(self):
         subprocess.call(["pep8", "--repeat", "--show-source",
                         "--ignore=E501",
-                        "--exclude=.venv,.tox,dist,doc", "."])
+                        "--exclude=.coverage/.venv,.tox,build,dist,doc,*egg*", "."])
 
 
 class CleanupCommand(Command):

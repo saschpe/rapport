@@ -17,7 +17,7 @@ from __future__ import print_function
 import os
 import shutil
 try:
-    import ConfigParser as configparser # Py2
+    import ConfigParser as configparser  # Py2
 except ImportError:
     import configparser
 
@@ -52,7 +52,6 @@ def find_config_files():
             config_files.append(path)
 
     return list(filter(bool, config_files))
-
 
 
 def init_user():
