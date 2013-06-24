@@ -38,7 +38,6 @@ import rapport.timeframe
 
 
 rapport.config.load()
-rapport.config.init_user()
 rapport.plugin.discover()
 
 

@@ -96,6 +96,9 @@ CONF = None
 def load():
     global CONF
     config = configparser.SafeConfigParser()
+
+    if not find_config_files():
+        init_user()
     config.read(find_config_files()[0])
     CONF = config
     return CONF
