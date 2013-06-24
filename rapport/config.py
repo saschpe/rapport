@@ -80,8 +80,7 @@ def init_user():
     if not os.path.exists(user_conf_file):
         if rapport.config.get_int("rapport", "verbosity") >= 1:
             print("Create user configuration {0}".format(user_conf_file))
-        default_config = find_config_files()
-        default_config = os.path.abspath(os.path.join("rapport", "config", "rapport.conf"))
+        default_config = os.path.abspath(os.path.join(os.path.splitext(__file__)[0], "rapport.conf"))
         shutil.copyfile(default_config, user_conf_file)
 
     if not (os.stat(user_conf_file).st_mode & 0o777) == 0o600:
