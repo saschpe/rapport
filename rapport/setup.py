@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import glob
+import os
 import re
 import shutil
 import subprocess
@@ -51,7 +52,7 @@ class PEP257Command(Command):
 
 
 class CleanupCommand(Command):
-    patterns = [".tox", ".venv", "build", "dist", "*.egg-info"]
+    patterns = [".coverage", ".tox", ".venv", "build", "dist", "*.egg", "*.egg-info"]
     description = "Clean up project directory"
     user_options = []
 
@@ -63,8 +64,11 @@ class CleanupCommand(Command):
 
     def run(self):
         for pattern in CleanupCommand.patterns:
-            for file in glob.glob(pattern):
-                shutil.rmtree(file, ignore_errors=True)
+            for f in glob.glob(pattern):
+                if os.path.isdir(f):
+                    shutil.rmtree(f, ignore_errors=True)
+                else:
+                    os.remove(f)
 
 
 def get_cmdclass():
