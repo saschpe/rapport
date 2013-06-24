@@ -25,7 +25,7 @@ class SetupTestCase(unittest.TestCase):
                                               "setup", "install-requires.txt")
         self.test_reqs_file = os.path.join("test", "unit", "fixtures",
                                            "setup", "test-requires.txt")
-        self.install_reqs = ["argparse", "launchpadlib", "lxml", "Jinja2",
+        self.install_reqs = ["argparse", "lxml", "Jinja2",
                              "paramiko", "requests"]
         self.test_reqs = ["nose"]
 

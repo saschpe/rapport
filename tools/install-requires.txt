@@ -1,6 +1,5 @@
 argparse
 futures
-launchpadlib
 lxml
 Jinja2
 paramiko
