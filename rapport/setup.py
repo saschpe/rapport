@@ -36,6 +36,20 @@ class PEP8Command(Command):
                         "--exclude=.coverage/.venv,.tox,build,dist,doc,*egg*", "."])
 
 
+class PEP257Command(Command):
+    description = "Run pep257 with custom options"
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        subprocess.call("find rapport -type f -name \"*.py\" | xargs pep257", shell=True)
+
+
 class CleanupCommand(Command):
     patterns = [".tox", ".venv", "build", "dist", "*.egg-info"]
     description = "Clean up project directory"
@@ -57,6 +71,7 @@ def get_cmdclass():
     """Dictionary of all distutils commands defined in this module.
     """
     return {"cleanup": CleanupCommand,
+            "pep257": PEP257Command,
             "pep8": PEP8Command}
 
 
