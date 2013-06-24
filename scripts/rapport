@@ -1,6 +1,14 @@
 #!/usr/bin/env python
 
+import os
 import sys
+
+# Actually this script is meant to be used only with a system-wide installed
+# binary distribution (thus executed from /usr/bin with rapport modules on
+# site.getsitepackages (e.g. /usr/lib(64)/python/site-packages/rapport). Since
+# people expect this to work in their development environments too, prepend
+# sys.path with the current working directory.
+sys.path.insert(0, os.getcwd())
 
 import rapport.cli
 

@@ -25,14 +25,10 @@ class CLIFunctionalTestCase(unittest.TestCase):
     def setUp(self):
         self.result = "{0}\n".format(__version__)
 
-    def test_call_rapport_cli(self):
-        args = [sys.executable, "rapport/cli.py", "--version"]
+    def test_execute_rapport_cli_module(self):
+        args = [sys.executable, "-m", "rapport.cli", "--version"]
         self.assertEqual(silent_popen(args), self.result)
 
-    def test_call_script_wrapper(self):
+    def test_invoke_script_wrapper_locally(self):
         args = ["scripts/rapport", "--version"]
-        # The script is meant to be with rapport installed, i.e. not
-        # from the (development) tree. Thus we have to adjust PYTHONPATH:
-        env = os.environ.copy()
-        env.update({"PYTHONPATH": "."})
-        self.assertEqual(silent_popen(args, env=env), self.result)
+        self.assertEqual(silent_popen(args), self.result)

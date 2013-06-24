@@ -117,6 +117,18 @@ If you need further assistance, check rapport's help:
 Hacking and contributing
 ------------------------
 
+You can test rapport from your git checkout by executing the rapport.cli module:
+
+.. code-block:: bash
+
+    $ python -m rapport.cli
+
+Alternatively, you can invoke the convenience script wrapper:
+
+.. code-block:: bash
+
+    $ ./scripts/rapport
+
 Fork `the repository`_ on Github to start making your changes to the **master**
 branch (or branch off of it). Don't forget to write a test for fixed issues or
 implemented features whenever appropriate. You can invoke the testsuite from

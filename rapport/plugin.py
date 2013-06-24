@@ -115,20 +115,10 @@ def discover():
     if rapport.config.get_int("rapport", "verbosity") >= 2:
         print("Found plugin modules: {0}".format(plugin_files))
 
-    # Sanitize sys.path. In order to use this code inside a git checkout,
-    # rapport/cli.py does sys.path.append(os.getcwd()). However, we have
-    # rapport modules shadowing system modules (e.g. rapport.email) but some
-    # plugins (notably bugzilla) may have issues with that.
-    old_sys_path = sys.path
-    sys.path = sys.path[2:]
-
     for plugin_file in plugin_files:
         if rapport.config.get_int("rapport", "verbosity") >= 2:
             print("Importing module {0}".format(_path_to_module(plugin_file)))
         __import__(_path_to_module(plugin_file))
-
-    # Restore sys.path
-    sys.path = old_sys_path
 
 
 _PLUGIN_CATALOG = {}
