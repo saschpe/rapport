@@ -108,7 +108,7 @@ def get(section, option, default=None):
         return default
 
 
-def get_int(section, option, default=None):
+def get_int(section, option, default=-1):
     return int(get(section, option, default))
 
 
