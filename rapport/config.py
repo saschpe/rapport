@@ -12,9 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import print_function
+
 import os
 import shutil
-import ConfigParser
+try:
+    import ConfigParser as configparser # Py2
+except ImportError:
+    import configparser
 
 import rapport.config
 
@@ -38,6 +43,7 @@ def _get_config_dirs():
 def find_config_files():
     """Return a list of default configuration files.
     """
+
     config_files = []
 
     for config_dir in _get_config_dirs():
@@ -45,7 +51,8 @@ def find_config_files():
         if os.path.exists(path):
             config_files.append(path)
 
-    return filter(bool, config_files)
+    return list(filter(bool, config_files))
+
 
 
 def init_user():
@@ -58,28 +65,29 @@ def init_user():
 
     if not os.path.exists(user_conf_dir):
         if rapport.config.get_int("rapport", "verbosity") >= 1:
-            print "Create user directory {0}".format(user_conf_dir)
+            print("Create user directory {0}".format(user_conf_dir))
         os.makedirs(user_conf_dir)
     for subdir in ["plugins", "reports", "templates/plugin", "templates/email", "templates/web"]:
         user_conf_subdir = os.path.join(user_conf_dir, subdir)
         if not os.path.exists(user_conf_subdir):
             if rapport.config.get_int("rapport", "verbosity") >= 1:
-                print "Create user directory {0}".format(user_conf_subdir)
+                print("Create user directory {0}".format(user_conf_subdir))
             os.makedirs(user_conf_subdir)
-        if subdir == "reports" and not (os.stat(user_conf_subdir).st_mode & 0777) == 0700:
+        if subdir == "reports" and not (os.stat(user_conf_subdir).st_mode & 0o777) == 0o700:
             if rapport.config.get_int("rapport", "verbosity") >= 1:
-                print "Set secure directory permissions for {0}".format(user_conf_subdir)
-            os.chmod(user_conf_subdir, 0700)
+                print("Set secure directory permissions for {0}".format(user_conf_subdir))
+            os.chmod(user_conf_subdir, 0o700)
     if not os.path.exists(user_conf_file):
         if rapport.config.get_int("rapport", "verbosity") >= 1:
-            print "Create user configuration {0}".format(user_conf_file)
+            print("Create user configuration {0}".format(user_conf_file))
         default_config = find_config_files()
         default_config = os.path.abspath(os.path.join("rapport", "config", "rapport.conf"))
         shutil.copyfile(default_config, user_conf_file)
-    if not (os.stat(user_conf_file).st_mode & 0777) == 0600:
+
+    if not (os.stat(user_conf_file).st_mode & 0o777) == 0o600:
         if rapport.config.get_int("rapport", "verbosity") >= 1:
-            print "Set secure file permissions for {0}".format(user_conf_file)
-        os.chmod(user_conf_file, 0600)
+            print("Set secure file permissions for {0}".format(user_conf_file))
+        os.chmod(user_conf_file, 0o600)
 
 
 CONF = None
@@ -87,7 +95,7 @@ CONF = None
 
 def load():
     global CONF
-    config = ConfigParser.SafeConfigParser()
+    config = configparser.SafeConfigParser()
     config.read(find_config_files()[0])
     CONF = config
     return CONF

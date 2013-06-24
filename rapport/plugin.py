@@ -12,11 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import print_function
+
 import os
 import site
 import sys
 import traceback
-import urlparse
+try:
+    import urllib.parse as urlparse
+except ImportError:
+    import urlparse
 
 import rapport.config
 import rapport.util
@@ -78,7 +83,8 @@ def _get_plugin_dirs():
     plugin_dirs = [
         os.path.expanduser(os.path.join("~", ".rapport", "plugins")),
         os.path.join("rapport", "plugins")  # Local dev tree
-    ] + map(lambda d: os.path.join(d, "rapport", "plugins"), site.getsitepackages())
+    ] + [os.path.join(d, "rapport", "plugins") for d in site.getsitepackages()]
+
     return plugin_dirs
 
 
@@ -109,7 +115,7 @@ def discover():
                     plugin_files.append(os.path.join(plugin_dir, plugin_file))
 
     if rapport.config.get_int("rapport", "verbosity") >= 2:
-        print "Found plugin modules: {0}".format(plugin_files)
+        print("Found plugin modules: {0}".format(plugin_files))
 
     # Sanitize sys.path. In order to use this code inside a git checkout,
     # rapport/cli.py does sys.path.append(os.getcwd()). However, we have
@@ -120,7 +126,7 @@ def discover():
 
     for plugin_file in plugin_files:
         if rapport.config.get_int("rapport", "verbosity") >= 2:
-            print "Importing module {0}".format(_path_to_module(plugin_file))
+            print("Importing module {0}".format(_path_to_module(plugin_file)))
         __import__(_path_to_module(plugin_file))
 
     # Restore sys.path
@@ -134,7 +140,7 @@ def register(name, klass):
     """Add a plugin to the plugin catalog.
     """
     if rapport.config.get_int("rapport", "verbosity") >= 1:
-        print "Registered plugin: {0}".format(name)
+        print("Registered plugin: {0}".format(name))
     _PLUGIN_CATALOG[name] = klass
 
 
@@ -143,20 +149,20 @@ def init(name, *args, **kwargs):
     """
     if name in _PLUGIN_CATALOG:
         if rapport.config.get_int("rapport", "verbosity") >= 2:
-            print "Initialize plugin {0}: {1} {2}".format(name, args, kwargs)
+            print("Initialize plugin {0}: {1} {2}".format(name, args, kwargs))
         try:
             return _PLUGIN_CATALOG[name](*args, **kwargs)
         except (ValueError, TypeError) as e:
-            print >>sys.stderr, "Failed to initialize plugin {0}: {1}!".format(name, e)
+            print("Failed to initialize plugin {0}: {1}!".format(name, e), file=sys.stderr)
     else:
-        print >>sys.stderr, "Failed to initialize plugin {0}: Not in catalog!".format(name)
+        print("Failed to initialize plugin {0}: Not in catalog!".format(name), file=sys.stderr)
 
 
 def init_from_config():
     plugins = []
     for plugin in rapport.config.plugins():
         plugins.append(init(**plugin))
-    return filter(bool, plugins)
+    return list(filter(bool, plugins))
 
 
 def catalog():

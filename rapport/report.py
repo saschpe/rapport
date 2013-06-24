@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import print_function
+
 import datetime
 import glob
 import os
@@ -83,15 +85,15 @@ def create_report(plugins, timeframe):
             plugin = plugin_futures[future]
             try:
                 if rapport.config.get_int("rapport", "verbosity") >= 2:
-                    print "Result for {0}: {1}".format(plugin.alias, future.result())
+                    print("Result for {0}: {1}".format(plugin.alias, future.result()))
                 tmpl = rapport.template.get_template(plugin, "text")
                 if tmpl:
                     results[plugin] = tmpl.render(future.result())
             except jinja2.TemplateSyntaxError as e:
                 print >>sys.stderr, "Syntax error in plugin {0} at {1} line {2}: {3}".format(plugin, e.name, e.lineno, e.message)                
             except Exception as e:
-                print >>sys.stderr, "Failed plugin {0}:{1}:".format(plugin, plugin.alias)
-                print >>sys.stderr, traceback.format_exc()
+                print("Failed plugin {0}:{1}: {2}!".format(plugin, plugin.alias, e), file=sys.stderr)
+                print(traceback.format_exc(), file=sys.stderr)
 
     results_dict = {"login": rapport.config.get("user", "login"),
                     "date": report_date_string,

@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import print_function
+
 import datetime
 import sys
 
@@ -115,13 +117,13 @@ def init(name, *args, **kwargs):
     """
     if name in _TIMEFRAME_CATALOG:
         if rapport.config.get_int("rapport", "verbosity") >= 2:
-            print "Initialize timeframe {0}: {1} {2}".format(name, args, kwargs)
+            print("Initialize timeframe {0}: {1} {2}".format(name, args, kwargs))
         try:
             return _TIMEFRAME_CATALOG[name](*args, **kwargs)
         except ValueError as e:
-            print >>sys.stderr, "Failed to initialize timeframe {0}: {1}!".format(name, e)
+            print("Failed to initialize timeframe {0}: {1}!".format(name, e), file=sys.stderr)
     else:
-        print >>sys.stderr, "Failed to initialize timeframe {0}: Not in catalog!".format(name)
+        print("Failed to initialize timeframe {0}: Not in catalog!".format(name), file=sys.stderr)
         sys.exit(1)
 
 

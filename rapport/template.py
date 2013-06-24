@@ -12,11 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import print_function
+
 import os
 import site
 import sys
 
 import jinja2
+
+import rapport.util
 
 
 def _get_template_dirs(type="plugin"):
@@ -25,7 +29,8 @@ def _get_template_dirs(type="plugin"):
     template_dirs = [
         os.path.expanduser(os.path.join("~", ".rapport", "templates", type)),
         os.path.join("rapport", "templates", type)  # Local dev tree
-    ] + map(lambda d: os.path.join(d, "rapport", "templates", type), site.getsitepackages())
+    ] + [os.path.join(d, "rapport", "templates", type) for d in site.getsitepackages()]
+
     return template_dirs
 
 
@@ -51,4 +56,4 @@ def get_template(name, format="text", type="plugin"):
     try:
         return _JINJA2_ENV[type].get_template(template_name)
     except jinja2.TemplateNotFound as e:
-        print >>sys.stderr, "Missing template {0}/{1}!".format(type, template_name)
+        print("Missing template {0}/{1}!".format(type, template_name), file=sys.stderr)

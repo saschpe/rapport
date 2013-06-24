@@ -16,6 +16,8 @@
 Command-line interface to rapport.
 """
 
+from __future__ import print_function
+
 import argparse
 import datetime
 import getpass
@@ -67,20 +69,20 @@ class CLI(object):
         else:
             timeframe = rapport.timeframe.init_from_config()
 
-        print "Timeframe: {0}".format(timeframe)
+        print("Timeframe: {0}".format(timeframe))
         report = rapport.report.create_report(self.plugins, timeframe)
-        print "Work report {0}:\n{1}".format(report["date"], report["body"])
+        print("Work report {0}:\n{1}".format(report["date"], report["body"]))
 
     def list(self, args):
         for report in rapport.report.list_reports():
-            print report
+            print(report)
 
     def show(self, args):
         report = rapport.report.get_report(args.report)
         if args.raw:
-            print report
+            print(report)
         else:
-            print report["email.body.text"]
+            print(report["email.body.text"])
 
     def delete(self, args):
         for report in args.report:
@@ -164,7 +166,7 @@ def main():
    #try:
         CLI().main()
    #except Exception as e:
-   #    print >> sys.stderr, e
+   #    print(e, file=sys.stderr)
    #    sys.exit(1)
 
 
