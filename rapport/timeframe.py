@@ -124,7 +124,10 @@ class RecentDaysTimeframe(Timeframe):
         self._name = "Recent days ({0})".format(days)
         self._end = datetime.datetime.utcnow()
         self._start = self._end - datetime.timedelta(days=days)
+        self._days = days
 
+    def __str__(self):
+        return "last %d days" % self._days
 
 _TIMEFRAME_CATALOG = {"current_month": CurrentMonthTimeframe,
                       "current_week": CurrentWeekTimeframe,
