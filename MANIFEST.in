@@ -2,6 +2,6 @@ include README.rst
 include LICENSE 
 include tox.ini
 include requirements.txt
+include test-requirements.txt
 recursive-include doc *
 recursive-include test *.py *.txt
-recursive-include tools *

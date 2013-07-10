@@ -22,9 +22,9 @@ from rapport.setup import parse_requirements
 class SetupTestCase(unittest.TestCase):
     def setUp(self):
         self.install_reqs_file = os.path.join("test", "unit", "fixtures",
-                                              "setup", "install-requires.txt")
+                                              "requirements.txt")
         self.test_reqs_file = os.path.join("test", "unit", "fixtures",
-                                           "setup", "test-requires.txt")
+                                           "test-requirements.txt")
         self.install_reqs = ["argparse", "lxml", "Jinja2",
                              "paramiko", "requests"]
         self.test_reqs = ["nose"]

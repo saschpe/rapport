@@ -3,6 +3,6 @@ python:
   - "2.7"
   #- "3.3"
 # command to install dependencies
-install: "pip install -r tools/test-requires.txt --use-mirrors"
+install: "pip install -r test-requirements.txt --use-mirrors"
 # command to run tests
 script: nosetests

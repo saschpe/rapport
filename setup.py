@@ -23,8 +23,8 @@ import rapport
 from rapport.setup import get_cmdclass, parse_requirements
 
 
-install_requires = parse_requirements("tools/install-requires.txt")
-tests_requires = parse_requirements("tools/test-requires.txt")
+install_requires = parse_requirements("requirements.txt")
+tests_requires = parse_requirements("test-requirements.txt")
 
 setup(
     name="rapport",
