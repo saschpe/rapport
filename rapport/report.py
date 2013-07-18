@@ -90,7 +90,7 @@ def create_report(plugins, timeframe):
                 if tmpl:
                     results[plugin] = tmpl.render(future.result())
             except jinja2.TemplateSyntaxError as e:
-                print >>sys.stderr, "Syntax error in plugin {0} at {1} line {2}: {3}".format(plugin, e.name, e.lineno, e.message)                
+                print >>sys.stderr, "Syntax error in plugin {0} at {1} line {2}: {3}".format(plugin, e.name, e.lineno, e.message)
             except Exception as e:
                 print("Failed plugin {0}:{1}: {2}!".format(plugin, plugin.alias, e), file=sys.stderr)
                 print(traceback.format_exc(), file=sys.stderr)
