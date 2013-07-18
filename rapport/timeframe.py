@@ -130,9 +130,6 @@ class RecentDaysTimeframe(Timeframe):
         self._start = self._end - datetime.timedelta(days=days)
         self._days = days
 
-    def __str__(self):
-        return "last %d days" % self._days
-
 _TIMEFRAME_CATALOG = {"current_month": CurrentMonthTimeframe,
                       "current_week": CurrentWeekTimeframe,
                       "month": MonthTimeframe,
