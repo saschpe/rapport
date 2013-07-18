@@ -34,7 +34,8 @@ class PEP8Command(Command):
     def run(self):
         subprocess.call(["pep8", "--repeat", "--show-source",
                         "--ignore=E501",
-                        "--exclude=.coverage/.venv,.tox,build,dist,doc,*egg*", "."])
+                        "--exclude=.coverage/.venv,.tox,build,dist,doc,*egg*",
+                        "rapport", "test"])
 
 
 class PEP257Command(Command):
