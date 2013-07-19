@@ -28,10 +28,10 @@ class BugzillaPlugin(rapport.plugin.Plugin):
         super(BugzillaPlugin, self).__init__(*args, **kwargs)
         self.email = email
 
-        url = "{0}/xmlrpc.cgi".format(self.url.geturl())
+        self.url = "{0}/xmlrpc.cgi".format(self.url.geturl())
 
     def collect(self, timeframe):
-        bz = bugzilla.Bugzilla(url=url)
+        bz = bugzilla.Bugzilla(url=self.url)
         bz.login(user=self.login, password=self.password)
 
         open_bugs = bz.query({"assigned_to": self.email,
