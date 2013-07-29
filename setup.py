@@ -45,7 +45,7 @@ setup(
     setup_requires=install_requires + tests_requires,
     install_requires=install_requires,
     cmdclass=get_cmdclass(),
-    tests_requires=tests_requires,
+    tests_require=tests_requires,
     test_suite="nose.collector",
     classifiers=[
         "Development Status :: 4 - Beta",
