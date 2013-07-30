@@ -21,23 +21,6 @@ import sys
 from distutils.core import Command
 
 
-class PEP8Command(Command):
-    description = "Run pep8 with custom options"
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        subprocess.call(["pep8", "--repeat", "--show-source",
-                        "--ignore=E501",
-                        "--exclude=.coverage/.venv,.tox,build,dist,doc,*egg*",
-                        "rapport", "test"])
-
-
 class PEP257Command(Command):
     description = "Run pep257 with custom options"
     user_options = []
@@ -76,8 +59,7 @@ def get_cmdclass():
     """Dictionary of all distutils commands defined in this module.
     """
     return {"cleanup": CleanupCommand,
-            "pep257": PEP257Command,
-            "pep8": PEP8Command}
+            "pep257": PEP257Command}
 
 
 def parse_requirements(requirements_file='requirements.txt'):
