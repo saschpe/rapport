@@ -150,13 +150,13 @@ environment`_ instead:
 
 .. code-block:: bash
 
-    $ virtualenv --system-site-packages .venv
+    $ virtualenv .venv
     $ source .venv/bin/activate
-    (.venv)$ pip install -r tools/test-requires.txt 
+    (.venv)$ pip install -r test-requirements.txt 
     (.venv)$ nosetests
 
 Lastly, if using virtualenv is too tedious or you want to test different
-configurations (py26, py27, py33), you can also use `tox`_:
+configurations (py26, py27, py33, pep8), you can also use `tox`_:
 
 .. code-block:: bash
 
