@@ -6,5 +6,7 @@ dist
 *.egg/
 *.egg-info
 .coverage
+coverage
+nosetests.xml
 .tox
-.venv
+.venv*
