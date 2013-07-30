@@ -3,8 +3,7 @@ dist
 *.vim
 *.pyc
 .*.sw?
-*.egg/
-*.egg-info
+*.egg*
 .coverage
 coverage
 nosetests.xml
