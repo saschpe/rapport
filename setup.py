@@ -42,7 +42,6 @@ setup(
                               "templates/web/*",
                               "config/*"],
                   "": ["LICENSE"]},
-    setup_requires=install_requires + tests_requires,
     install_requires=install_requires,
     cmdclass=get_cmdclass(),
     tests_require=tests_requires,
