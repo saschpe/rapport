@@ -18,8 +18,6 @@ E-Mail functionality.
 
 import subprocess
 
-import rapport.config
-
 
 def compose():
     raise NotImplementedError()

@@ -51,5 +51,5 @@ def get_template(name, format="text", type="plugin"):
     template_name = "{0}.{1}.jinja2".format(name, format)
     try:
         return _JINJA2_ENV[type].get_template(template_name)
-    except jinja2.TemplateNotFound as e:
+    except jinja2.TemplateNotFound:
         print("Missing template {0}/{1}!".format(type, template_name), file=sys.stderr)

@@ -45,7 +45,8 @@ class OpenBuildServicePlugin(rapport.plugin.Plugin):
         #"https://api.opensuse.org/search/request/id?match=history/@who='saschpe'"
 
         for project in user_projects:
-            requests = self._get_xml("{0}/request?view=collection&user={1}&project={2}".format(self.url.geturl(), self.login, project))
+            #requests = self._get_xml("{0}/request?view=collection&user={1}&project={2}".format(self.url.geturl(), self.login, project))
+            pass
 
 
 rapport.plugin.register("openbuildservice", OpenBuildServicePlugin)

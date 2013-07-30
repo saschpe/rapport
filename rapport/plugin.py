@@ -16,7 +16,6 @@ from __future__ import print_function
 
 import os
 import sys
-import traceback
 try:
     import urllib.parse as urlparse
 except ImportError:
