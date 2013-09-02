@@ -38,7 +38,10 @@ class GithubPlugin(rapport.plugin.Plugin):
             link_url = response.headers["link"]
             if link_url.startswith("<"):
                 # If URL looks like this: '<https://api.github.com/user/$ID/events?page=2>; rel="next"'
-                link_url = re.match('<([^>]+)>; rel="next"', link_url).groups()[0]
+                m = re.match('<([^>]+)>; rel="next"', link_url)
+                if m:
+                    link_url = m.groups()[0]
+                # otherwise it's probably a rel="prev" link which we don't want
         return json.loads(response.text), link_url
 
     def collect(self, timeframe):
