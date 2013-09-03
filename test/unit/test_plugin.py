@@ -22,4 +22,4 @@ import rapport.plugin
 class PluginTestCase(unittest.TestCase):
     def test__get_plugin_dirs(self):
         plugin_dirs = rapport.plugin._get_plugin_dirs()
-        self.assertIn(os.path.expanduser(os.path.join("~", ".rapport", "plugins")), plugin_dirs)
+        self.assertIn(os.path.expanduser(os.path.join("~", ".config", "rapport", "plugins")), plugin_dirs)

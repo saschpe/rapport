@@ -27,13 +27,17 @@ import traceback
 
 import jinja2
 
-import rapport.config
+XDG_CONFIG_DATA_DIR = os.getenv('XDG_DATA_HOME') or \
+                      os.path.expanduser(os.path.join("~", ".local", "share"))
+USER_DATA_DIR       = os.path.join(XDG_CONFIG_DATA_DIR, "rapport")
+
+from rapport.config import USER_CONFIG_DIR
 import rapport.template
 import rapport.util
 
 
 def _get_reports_path(report=None):
-    path_parts = ["~", ".rapport", "reports"]
+    path_parts = [USER_DATA_DIR, "reports"]
     if report:
         path_parts.append(report)
     return os.path.expanduser(os.path.join(*path_parts))
