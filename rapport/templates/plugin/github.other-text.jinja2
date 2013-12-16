@@ -1,0 +1,116 @@
+%%  if events
+[github]
+
+%%      if (commit_comment_events or
+            issues_comment_events or
+            pull_request_review_comment_events)
+  -
+%%          if commit_comment_events
+{{ commit_comment_events|length }} commits
+%%          endif
+%%          if issues_comment_events
+%%              if commit_comment_events
+ and
+%%              endif
+{{ issues_comment_events|length }} issues
+%%          endif
+%%          if pull_request_review_comment_events
+%%              if (issues_comment_events or
+                    (commit_comment_events and not issues_comment_events))
+ and
+%%          endif
+{{ pull_request_review_comment_events|length }} pull request reviews
+ commented
+%%      endif
+%%  endif
+
+%%  if create_events
+%%      for repo, events in create_events|groupby("repo.name")
+%%          for type, elist in events|groupby("payload.ref_type")
+%%              set foo = elist|join(', ', attribute='payload.ref')
+%%              trans count=elist|length
+  - created {{ count }} {{ type }} in {{ repo }}: {{ foo }}
+%%                  pluralize
+  - created {{ count }} {{ type }}es in {{ repo }}: {{ foo }}
+%%              endtrans
+%%          endfor
+%%      endfor
+%%  endif
+
+{# Do we need info about deleted branches or tags?
+%%  if delete_events
+- {{ delete_events|length }} deleted repositories
+%%  endif
+#}
+
+%%  if gist_events
+%%      trans count=gist_events|length
+  - {{ count }} gist
+%%          pluralize
+  - {{ count }} gists
+%%      endtrans
+%%  endif
+
+%%  if gollum_events
+%%      trans count=gollum_events|length
+- {{ count }} page edit:
+%%          pluralize
+- {{ count }} page edits:
+%%      endtrans
+%%      for repo, pages in gollum_events|groupby("repo.name")
+  + {{ pages|length }} in {{ repo }}
+%%      endfor
+%%  endif
+
+%%  if issues_events
+%%      for action, issues in issues_events|groupby("payload.action")
+  - {{issues|length}} issues {{ action }}
+%%          for issue in issues
+    + {{ issue['repo']['name'] }}#{{ issue['payload']['issue']['number'] }}: {{ issue['payload']['issue']['title'] }}
+%%          endfor
+%%      endfor
+%%  endif
+
+%%  if fork_events
+
+%%      trans count=fork_events|length
+  - forked {{ count }} repository:
+%%          pluralize
+  - forked {{ count }} repositories:
+%%      endtrans
+%%      for fork_event in fork_events
+    + {{ fork_event.payload.forkee.full_name }} from {{ fork_event.repo.name }}
+%%      endfor
+%%  endif
+
+%%  if pull_request_events
+  -
+%%      for action, pulls in pull_request_events|groupby("payload.action")
+%%          if not loop.first
+ and
+%%          endif
+{{ pulls|length }} {{ action }}
+%%      endfor
+ pull requests
+%%  endif
+
+%%  if push_events
+%%      trans count=push_events|length
+  - {{ count }} push event summing up to:
+%%          pluralize
+  - {{ count }} push events summing up to:
+%%      endtrans
+%%      for repo, pushs in push_events|groupby("repo.name")
+%%          trans count=pushs|sum(attribute="payload.size")
+    + {{ count }} commit to {{ repo }}
+%%              pluralize
+    + {{ count }} commits to {{ repo }}
+%%          endtrans
+%%      endfor
+%%  endif
+
+{# Do these matter?
+%%  if team_add_events
+  - team add events
+%%  endif
+#}
