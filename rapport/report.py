@@ -14,6 +14,7 @@
 
 from __future__ import print_function
 
+import codecs
 import glob
 import os
 import shutil
@@ -107,7 +108,7 @@ def create_report(plugins, timeframe):
     template_email_body = rapport.template.get_template("body", type="email")
     email_body = template_email_body.render(results_dict)
     email_body_file = os.path.join(report_path, "email.body.text")
-    with open(email_body_file, "w") as report:
+    with codecs.open(email_body_file, "w", encoding="utf-8") as report:
         report.write(email_body)
 
     # We can re-use the e-mail body as the general report body:
