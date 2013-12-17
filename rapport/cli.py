@@ -63,7 +63,7 @@ class CLI(object):
 
         print("Timeframe: {0}".format(timeframe))
         report = rapport.report.create_report(self.plugins, timeframe)
-        print("Work report {0}:\n{1}".format(report["date"], report["body"]))
+        print(u"Work report {0}:\n{1}".format(report["date"], report["body"]))
 
     def list(self, args):
         for report in rapport.report.list_reports():
