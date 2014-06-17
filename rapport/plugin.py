@@ -72,6 +72,19 @@ class Plugin(object):
         """
         return rapport.util.camelcase_to_underscores(self.__class__.__name__).rsplit("_plugin")[0]
 
+    def try_collect(self, timeframe):
+        """
+        Run the plugin's collect() method, and if an exception was caught,
+        store the traceback before re-raising, in order that it doesn't
+        get lost when concurrent.futures.Future.result() is invoked.
+        """
+        try:
+            self.collect(timeframe)
+        except Exception as e:
+            exc_type, exc_val, exc_tb = sys.exc_info()
+            e.original_traceback = exc_tb
+            raise
+
     def collect(self, timeframe):
         raise NotImplementedError()
 
