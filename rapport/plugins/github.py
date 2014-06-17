@@ -56,6 +56,11 @@ class GithubPlugin(rapport.plugin.Plugin):
         # and last one to have a criteria for stopping pagination.
         while True:
             events_json, url = self._get_json(url)
+            if 'message' in events_json:
+                msg = events_json['message']
+                if 'documentation_url' in events_json:
+                    msg += ' (%s)' % events_json['documentation_url']
+                raise RuntimeError(msg)
 
             for event in events_json:
                 created_at = rapport.util.datetime_from_iso8601(event["created_at"])
