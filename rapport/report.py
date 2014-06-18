@@ -84,20 +84,25 @@ def create_report(plugins, timeframe):
     # Execute all plugins in parallel and join on results:
     results = {}
     with futures.ThreadPoolExecutor(max_workers=4) as executor:
-        plugin_futures = dict((executor.submit(p.collect, timeframe), p) for p in plugins)
+        plugin_futures = dict((executor.submit(p.try_collect, timeframe), p) for p in plugins)
         for future in futures.as_completed(plugin_futures):
             plugin = plugin_futures[future]
             try:
+                res = future.result()
                 if rapport.config.get_int("rapport", "verbosity") >= 2:
-                    print("Result for {0}: {1}".format(plugin.alias, future.result()))
+                    print("Result for {0}: {1}".format(plugin.alias, res))
                 tmpl = rapport.template.get_template(plugin, "text")
                 if tmpl:
-                    results[plugin] = tmpl.render(future.result())
+                    results[plugin] = tmpl.render(res)
             except jinja2.TemplateSyntaxError as e:
                 print >>sys.stderr, "Syntax error in plugin {0} at {1} line {2}: {3}".format(plugin, e.name, e.lineno, e.message)
             except Exception as e:
-                print("Failed plugin {0}:{1}: {2}!".format(plugin, plugin.alias, e), file=sys.stderr)
-                print(traceback.format_exc(), file=sys.stderr)
+                exc_type, exc_val, exc_tb = sys.exc_info()
+                traceback.print_tb(e.original_traceback, file=sys.stderr)
+                print("Failed plugin {0}:{1}: {2}: {3}" \
+                      .format(plugin, plugin.alias, e.__class__.__name__, e),
+                      file=sys.stderr)
+                sys.exit(1)
 
     results_dict = {"login": rapport.config.get("user", "login"),
                     "date": report_date_string,
