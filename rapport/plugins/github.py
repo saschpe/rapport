@@ -16,6 +16,7 @@
 Github plugin.
 """
 
+import csv
 import collections
 import json
 import re
@@ -33,16 +34,39 @@ class GithubPlugin(rapport.plugin.Plugin):
 
     def _get_json(self, url):
         response = requests.get(url, auth=(self.login, self.password))
-        link_url = None
-        if "link" in response.headers:
-            link_url = response.headers["link"]
-            if link_url.startswith("<"):
-                # If URL looks like this: '<https://api.github.com/user/$ID/events?page=2>; rel="next"'
-                m = re.match('<([^>]+)>; rel="next"', link_url)
-                if m:
-                    link_url = m.groups()[0]
-                # otherwise it's probably a rel="prev" link which we don't want
-        return json.loads(response.text), link_url
+
+        return json.loads(response.text), \
+            self._get_next_link_url(response.headers["link"])
+
+    def _get_next_link_url(self, header):
+        # Handles pagination of results, as per
+        # https://developer.github.com/v3/#pagination
+        #
+        # Typical header looks something like this (minus line breaks):
+        #
+        #   <https://api.github.com/user/100738/events?page=9>; rel="next",
+        #   <https://api.github.com/user/100738/events?page=10>; rel="last",
+        #   <https://api.github.com/user/100738/events?page=1>; rel="first",
+        #   <https://api.github.com/user/100738/events?page=7>; rel="prev"
+        #
+        # See also http://tools.ietf.org/html/rfc5988#section-5.5
+        #
+        # In *theory* we could have quoted commas somewhere in the header,
+        # so use a CSV parser to be safe:
+        links = csv.reader([header], skipinitialspace=True).next()
+
+        for link in links:
+            link_params = re.split('; *', link)
+            link_url = link_params.pop(0)
+            m = re.match('<(.+)>', link_url)
+            if m:
+                link_url = m.group(1)
+            for link_param in link_params:
+                if re.match('rel="?next"?', link_param):
+                    return link_url
+
+        # No URL for next page found
+        return None
 
     def collect(self, timeframe):
         url = "https://api.github.com/users/{0}/events".format(self.login)
@@ -54,8 +78,11 @@ class GithubPlugin(rapport.plugin.Plugin):
 
         # Paginate through the activity stream, mark first item in timeline
         # and last one to have a criteria for stopping pagination.
-        while True:
+        while url is not None:
+            if rapport.config.get_int("rapport", "verbosity") >= 2:
+                print("retrieving URL %s" % url)
             events_json, url = self._get_json(url)
+
             if 'message' in events_json:
                 msg = events_json['message']
                 if 'documentation_url' in events_json:
@@ -78,9 +105,6 @@ class GithubPlugin(rapport.plugin.Plugin):
                     if d["events_by_time"]:  # Found the last event inside the timeframe
                         url = None  # Don't fetch another page, got everything interesting
                         break  # No need to process the remaining events on this page
-
-            if url is None:
-                break  # Reached last page of activity stream, that's it :-)
 
         return self._results(d)
 
