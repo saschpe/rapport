@@ -90,7 +90,10 @@ def create_report(plugins, timeframe):
             try:
                 res = future.result()
                 if rapport.config.get_int("rapport", "verbosity") >= 2:
-                    print("Result for {0}: {1}".format(plugin.alias, res))
+                    visible_result = repr(res)
+                    if len(visible_result) > 1000:
+                        visible_result = visible_result[:1000] + ' ...'
+                    print("Result for %s: %s" % (plugin.alias, visible_result))
                 tmpl = rapport.template.get_template(plugin, "text")
                 if tmpl:
                     results[plugin] = tmpl.render(res)
