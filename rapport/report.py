@@ -98,7 +98,11 @@ def create_report(plugins, timeframe):
                 print >>sys.stderr, "Syntax error in plugin {0} at {1} line {2}: {3}".format(plugin, e.name, e.lineno, e.message)
             except Exception as e:
                 exc_type, exc_val, exc_tb = sys.exc_info()
-                traceback.print_tb(e.original_traceback, file=sys.stderr)
+                if hasattr(e, 'original_traceback'):
+                    print("Traceback from plugin thread:", file=sys.stderr)
+                    traceback.print_tb(e.original_traceback, file=sys.stderr)
+                    print("\nTraceback from parent process:", file=sys.stderr)
+                traceback.print_tb(exc_tb, file=sys.stderr)
                 print("Failed plugin {0}:{1}: {2}: {3}" \
                       .format(plugin, plugin.alias, e.__class__.__name__, e),
                       file=sys.stderr)
