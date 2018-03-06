@@ -20,10 +20,7 @@ import os
 import shutil
 import subprocess
 import sys
-if sys.version_info > (3, 3):
-    import concurrent.futures as futures
-else:
-    import futures
+import concurrent.futures as futures
 import traceback
 
 import jinja2
