@@ -4,10 +4,10 @@ Rapport: Work report generator for the lazy
 .. image:: https://travis-ci.org/saschpe/rapport.png?branch=master
         :target: https://travis-ci.org/saschpe/rapport
 
-.. image:: https://pypip.in/d/rapport/badge.png
+.. image:: https://img.shields.io/pypi/dm/rapport.svg
         :target: https://pypi.python.org/pypi/rapport
 
-.. image:: https://pypip.in/v/rapport/badge.png
+.. image:: https://img.shields.io/pypi/v/rapport.svg
         :target: https://pypi.python.org/pypi/rapport
 
 Writing work reports is tedious. Some people have custom hacks. This is meant
